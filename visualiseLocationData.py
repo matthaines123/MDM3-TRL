@@ -1,8 +1,14 @@
 from getLocationData import getBusData
 import matplotlib.pyplot as plt
+import math
+from collections import ChainMap
+import pandas as pd
+import numpy as np
+
 
 #Getting the Location data from open data source
-timestamp, busData = getBusData(699)
+routeIDs = []
+routeID = 2093
 
 def getAllAttributes(busData):
     '''
@@ -18,7 +24,7 @@ def getAllAttributes(busData):
     for key, value in recursiveDict(busData[0]):
         print(key, value,'\n')
 
-def getBusLocations(busData):
+def getBusLocationsDict(busData):
     '''
     Returns a dict of bus latitudes and longitudes, the keys for the dictionary
     are the bus vehicle references
@@ -34,6 +40,42 @@ def getBusLocations(busData):
         busLocationDict[busID] = busLatLong
     return busLocationDict
 
+def getBusLocationsDF(busLocationDict):
+    '''
+    Returns a pandas dataframe of the data in the bus location dictionary
+    '''
+    df = pd.DataFrame(data = busLocationDict)
+    return df.transpose()
+
+            
+def allIDs(routeIDs):
+    '''
+    Function that can be used to get the coords of buses
+    across lot's of operators
+    '''
+    allData = []
+    if routeIDs == []:
+        routeIDs = range(0, 10000)
+    #Iterating over each operator
+    for i in routeIDs:
+        timestamp, data = getBusData(i)
+        if data != False:
+            busData = getBusLocationsDict(data)
+            allData.append(busData)
+    #Convert list of dicts to one dict
+    busData = dict(ChainMap(*allData))
+    plotLatLong(busData)
+
+
+def singleId(routeID):
+    '''
+    Plotting the gps of buses from a single operator
+    '''
+    timestamp, busData = getBusData(routeID)
+    plotLatLong(getBusLocationsDict(busData))
+
+
+            
 def plotLatLong(busLocationDict):
     '''
     Plotting the buses on a matplotlib scatter plot
@@ -46,6 +88,5 @@ def plotLatLong(busLocationDict):
     plt.scatter(longs, lats)
     plt.show()
 
-
-plotLatLong(getBusLocations(busData))
+#allIDs(routeIDs)
 #getAllAttributes(busData)
