@@ -12,7 +12,7 @@ from visualiseLocationData import getBusLocationsDF, getBusLocationsDict, plotLa
 from getLocationData import getBusData
 from itertools import product
 
-datafeedID = 685
+datafeedID = 699
 
 '''
 First Bus Bristol = 699
@@ -58,7 +58,7 @@ x1_tile, y1_tile = math.ceil(x1 / TILE_SIZE), math.ceil(y1 / TILE_SIZE)
 
 #Check how many tiles are needed for visual, more tiles takes longer
 print((x1_tile - x0_tile) * (y1_tile - y0_tile))
-assert (x1_tile - x0_tile) * (y1_tile - y0_tile) < 200, "That's too many tiles!"
+#assert (x1_tile - x0_tile) * (y1_tile - y0_tile) < 200, "That's too many tiles!"
 
 #Create a map of all the tiles together
 img = Image.new('RGB', (
