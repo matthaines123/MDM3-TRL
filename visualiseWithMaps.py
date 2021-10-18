@@ -17,12 +17,15 @@ from visualiseLocationData import getBusLocationsDF, getBusLocationsDict, plotLa
 from getLocationData import getBusData
 from itertools import product
 
-def makeCartopyMap(df):
+def makeCartopyMap(initial_df):
     '''
     Input dateframe including lats and longs
     Returns a cartopy map
     '''
-
+    if initial_df.shape[0] > 20:
+        df = initial_df.head(20)
+    else:
+        df = initial_df
     lats = list(map(float, df[0]))
     longs = list(map(float, df[1]))
 
@@ -35,16 +38,17 @@ def makeCartopyMap(df):
     ax = fig.add_subplot(1, 1, 1, projection=imagery.crs)
     ax.set_extent([lef, rgt, bot, top], ccrs.PlateCarree())
 
-    theta = np.linspace(0, 2*np.pi, 100)
+    '''theta = np.linspace(0, 2*np.pi, 100)
     circle_verts = np.vstack([np.sin(theta), np.cos(theta)]).T
-    circle = Path.make_compound_path(Path(circle_verts[::-1]), Path(circle_verts*0.6))
+    circle = Path.make_compound_path(Path(circle_verts[::-1]), Path(circle_verts*0.1))'''
     
+    #rectangle = Path([[-1.1, -0.2], [1, -0.2], [1, 0.3], [-1.1, 0.3]])
     ax.add_image(imagery, 14)
     
-    ax.plot(longs, lats, transform=ccrs.PlateCarree(), marker=circle, color='red', markersize=9, linestyle='')
+    ax.plot(longs, lats, transform=ccrs.PlateCarree(), marker='x', color='red', markersize=10, linestyle='', alpha=0.5)
     plt.show()
 
-datafeedID = 3587
+datafeedID = 699
 
 '''
 First Bus Bristol = 699
@@ -57,7 +61,6 @@ timestamp, data = getBusData(datafeedID)
 busDict = getBusLocationsDict(data)
 df = getBusLocationsDF(busDict)
 #Convert bus GPS coords to lists of latitudes and longitudes
-
 
 #makeMap(lats, longs)
 makeCartopyMap(df)
