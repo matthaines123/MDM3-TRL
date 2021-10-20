@@ -38,14 +38,16 @@ def makeCartopyMap(initial_df):
     ax = fig.add_subplot(1, 1, 1, projection=imagery.crs)
     ax.set_extent([lef, rgt, bot, top], ccrs.PlateCarree())
 
-    '''theta = np.linspace(0, 2*np.pi, 100)
+    theta = np.linspace(0, 2*np.pi, 100)
     circle_verts = np.vstack([np.sin(theta), np.cos(theta)]).T
-    circle = Path.make_compound_path(Path(circle_verts[::-1]), Path(circle_verts*0.1))'''
+    circle = Path.make_compound_path(Path(circle_verts[::-1]), Path(circle_verts*0.1))
+
+    
     
     #rectangle = Path([[-1.1, -0.2], [1, -0.2], [1, 0.3], [-1.1, 0.3]])
     ax.add_image(imagery, 14)
     
-    ax.plot(longs, lats, transform=ccrs.PlateCarree(), marker='x', color='red', markersize=10, linestyle='', alpha=0.5)
+    ax.plot(longs, lats, transform=ccrs.PlateCarree(), marker=circle, color='red', markersize=10, linestyle='', alpha=0.5)
     plt.show()
 
 datafeedID = 699
