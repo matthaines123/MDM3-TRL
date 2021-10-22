@@ -26,13 +26,16 @@ def getBusLocationwtimes(dataAtTimes, getBusLocationsDict):
     ''' Simplify the data to only the latitude and longitude for each vehicle at each time. '''
 
     busTimeLocationDict = {}
+    busLineDict = {}
 
     for time in dataAtTimes:
 
         dataAtSingleTime = dataAtTimes[time]
 
-        busLocationData = getBusLocationsDict(dataAtSingleTime)
+        busLocationData, busLineData = getBusLocationsDict(dataAtSingleTime)
 
         busTimeLocationDict[time] = busLocationData
 
-    return busTimeLocationDict
+        busLineDict[time] = busLineData
+
+    return busTimeLocationDict, busLineDict
