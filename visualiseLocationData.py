@@ -37,6 +37,7 @@ def getBusLocationsDict(busData):
         busLatLong = [singleBusData['VehicleLocation']['Latitude'], singleBusData['VehicleLocation']['Longitude']]
         #Get busId
         busID = singleBusData['VehicleRef']
+
         busLocationDict[busID] = busLatLong
     return busLocationDict
 
@@ -90,7 +91,6 @@ def plotLatLong(busLocationDict):
 
 #allIDs(routeIDs)
 
-#time, data = getBusData(699)
-
-
-#getAllAttributes(data)
+timestamp, data = getBusData(routeID)
+busDict = getBusLocationsDict(data)
+getAllAttributes(busDict)
