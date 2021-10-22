@@ -1,31 +1,37 @@
-from getLocationDataAtTimes import logLocationData, getBusLocationwtimes
-from getLocationData import getBusData
 from LoadLocationData import LoadLocationData
-from visualiseLocationData import getBusLocationsDict
 import matplotlib.pyplot as plt
+import random
 
-dataAtTimes = LoadLocationData('LocationDataLog15-10-2021,12;38;16RunTime60')
-
-def reduceNoOfBuses(dataAtTimes, busId):
+def getChosenBusRoutes(dataAtTimes, busId):
 
     """ Reduces data to include only busId's given """
 
-    singleBusDict = {}
+    ''' Allow a random selection of busId's by busId = the number of busId's to be selected '''
+    if type(busId) is int:
+        firsttime = list(dataAtTimes.keys())[0]
+        keys = list(dataAtTimes[firsttime].keys())
+        busId = random.choices(keys, k=busId)
+    else:
+        busId = busId
+
+    chosenBusRoutesDict = {}
 
     for time in dataAtTimes:
 
         dataAtSingleTime = dataAtTimes[time]
         busLocationData = {k: dataAtSingleTime[k] for k in busId}
-        singleBusDict[time] = busLocationData
+        chosenBusRoutesDict[time] = busLocationData
 
-    return singleBusDict
+    chosenBusRoutesDict
 
-def plotTrajectory(dataAtTimes, getBusLocationsDict, busId):
+    return chosenBusRoutesDict
+    
+def plotTrajectory(dataAtTimes, busId):
 
     ''' Plot the trajectory of a bus 
         by plotting the longitude and latitude of a bus over the location data time input '''
 
-    locationDict = reduceNoOfBuses(dataAtTimes, getBusLocationsDict, busId)
+    locationDict = getChosenBusRoutes(dataAtTimes, busId)
 
     lats, longs = [], []
     for key, vals in locationDict.items():
@@ -34,7 +40,9 @@ def plotTrajectory(dataAtTimes, getBusLocationsDict, busId):
             lats.append(float(val[0]))
             longs.append(float(val[1]))
 
-    plt.scatter(longs, lats)
+    plt.scatter(longs, lats, s=10, alpha=0.01)
     plt.show()
-        
-plotTrajectory(dataAtTimes, getBusLocationsDict, ['69511'])
+
+#dfdataAtTimes, dataLines, dataAtTimes = LoadLocationData('LocationDataLog19-10-2021,18;16;05RunTime28800.json','LineReferences20-10-2021,20;58;28RunTime60.json')
+dfdataAtTimes = LoadLocationData('LocationDataLog19-10-2021,18;16;05RunTime28800.json')
+plotTrajectory(dfdataAtTimes, 4)
