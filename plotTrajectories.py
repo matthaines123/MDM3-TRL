@@ -2,7 +2,9 @@ from getLocationDataAtTimes import logLocationData, getBusLocationwtimes
 from getLocationData import getBusData
 from LoadLocationData import LoadLocationData
 from visualiseLocationData import getBusLocationsDict
+from visualiseWithMaps import makeCartopyMap
 import matplotlib.pyplot as plt
+import pandas as pd
 
 dataAtTimes = LoadLocationData('LocationDataLog15-10-2021,12;38;16RunTime60')
 
@@ -20,12 +22,24 @@ def reduceNoOfBuses(dataAtTimes, busId):
 
     return singleBusDict
 
+def reduceBusesDf(dataAtTimes, busId):
+
+    singleBusDict = {}
+
+    for time in dataAtTimes:
+
+        dataAtSingleTime = dataAtTimes[time]
+        for k in busId:
+            singleBusDict[time] = dataAtSingleTime[k]
+
+    return pd.DataFrame.from_dict(singleBusDict, orient='index')
+
 def plotTrajectory(dataAtTimes, getBusLocationsDict, busId):
 
     ''' Plot the trajectory of a bus 
         by plotting the longitude and latitude of a bus over the location data time input '''
 
-    locationDict = reduceNoOfBuses(dataAtTimes, getBusLocationsDict, busId)
+    locationDict = reduceNoOfBuses(dataAtTimes, busId)
 
     lats, longs = [], []
     for key, vals in locationDict.items():
@@ -36,5 +50,9 @@ def plotTrajectory(dataAtTimes, getBusLocationsDict, busId):
 
     plt.scatter(longs, lats)
     plt.show()
-        
-plotTrajectory(dataAtTimes, getBusLocationsDict, ['69511'])
+
+if __name__ == '__main__':
+    dataAtTimes = LoadLocationData('LocationDataLog18-10-2021,16;53;01RunTime1800.json')
+    busesDf = reduceBusesDf(dataAtTimes, ['69511'])
+    makeCartopyMap(busesDf)
+    
