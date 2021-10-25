@@ -30,6 +30,13 @@ def getChosenBusRoutes(dataAtTimes, busId):
 
 def reduceBusesDf(dataAtTimes, busId):
 
+    if type(busId) is int:
+        firsttime = list(dataAtTimes.keys())[0]
+        keys = list(dataAtTimes[firsttime].keys())
+        busId = random.choices(keys, k=busId)
+    else:
+        busId = busId
+
     singleBusDict = {}
 
     for time in dataAtTimes:
@@ -58,7 +65,7 @@ def plotTrajectory(dataAtTimes, getBusLocationsDict, busId):
     plt.show()
 
 if __name__ == '__main__':
-    dataAtTimes = LoadLocationData('LocationDataLog18-10-2021,16;53;01RunTime1800.json')
-    busesDf = reduceBusesDf(dataAtTimes, ['69511'])
+    dataAtTimes = LoadLocationData('LocationDataLog19-10-2021,18;16;05RunTime28800.json')
+    busesDf = reduceBusesDf(dataAtTimes, 1)
     makeCartopyMap(busesDf)
     
