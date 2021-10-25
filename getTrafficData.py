@@ -1,20 +1,24 @@
 import matplotlib.pyplot as plt
 from matplotlib.path import Path
 import json
+from LoadLocationData import LoadLocationData
 import cartopy.crs as ccrs
 from cartopy.io.img_tiles import OSM
 import pandas as pd
 import numpy as np
 
-df = pd.read_json(r"C:\Users\IsaacEvans\Documents\MDM\MDM3-TRL\dim-journey-links.json")
+def getTrafficGates():
+    df = pd.read_json("dim-journey-links.json")
 
-data = json.load(open(r"C:\Users\IsaacEvans\Documents\MDM\MDM3-TRL\dim-journey-links.json"))
-data = data[0]
-coordinates = np.array(data['fields']['geo_shape']['coordinates'])
+    data = json.load(open("dim-journey-links.json"))
+    data = data[0]
+    coordinates = np.array(data['fields']['geo_shape']['coordinates'])
+    new_coordinates = []
+    for pair in coordinates:
+        new_coordinates.append([pair[1], pair[0]])
+    return new_coordinates
 
-print(coordinates)
-
-def main():
+def main(coordinates):
     imagery = OSM()
     lats = list(map(float, coordinates[:, 1]))
     longs = list(map(float, coordinates[:,0]))
@@ -33,4 +37,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    coordinates = getTrafficGates()

@@ -1,4 +1,7 @@
 from LoadLocationData import LoadLocationData
+from visualiseWithMaps import makeCartopyMap
+import matplotlib.pyplot as plt
+import pandas as pd
 import matplotlib.pyplot as plt
 import random
 import pandas as pd
@@ -27,7 +30,26 @@ def getChosenBusRoutes(dataAtTimes, busId):
     chosenBusRoutesDF = pd.DataFrame(data = chosenBusRoutesDict)
 
     return chosenBusRoutesDF, chosenBusRoutesDict
-    
+
+def reduceBusesDf(dataAtTimes, busId):
+
+    if type(busId) is int:
+        firsttime = list(dataAtTimes.keys())[0]
+        keys = list(dataAtTimes[firsttime].keys())
+        busId = random.choices(keys, k=busId)
+    else:
+        busId = busId
+
+    singleBusDict = {}
+
+    for time in dataAtTimes:
+
+        dataAtSingleTime = dataAtTimes[time]
+        for k in busId:
+            singleBusDict[time] = dataAtSingleTime[k]
+
+    return pd.DataFrame.from_dict(singleBusDict, orient='index')
+
 def plotTrajectory(dataAtTimes, busId):
 
     ''' Plot the trajectory of a bus 
@@ -57,7 +79,8 @@ def plotTrajectory(dataAtTimes, busId):
     
     plt.show()
 
-dfdataAtTimes = LoadLocationData('LocationDataLog19-10-2021,18;16;05RunTime28800.json')
-plotTrajectory(dfdataAtTimes, 1)
-
-#### COLOUR CODE #####
+if __name__ == '__main__':
+    dataAtTimes = LoadLocationData('LocationDataLog19-10-2021,18;16;05RunTime28800.json')
+    busesDf = reduceBusesDf(dataAtTimes, 1)
+    makeCartopyMap(busesDf)
+    

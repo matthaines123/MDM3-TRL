@@ -58,11 +58,13 @@ Frome Bus = 3587
 Faresaver = 685
 
 '''
-#Get the bus data from the open bus data API
-timestamp, data = getBusData(datafeedID)
-busDict = getBusLocationsDict(data)
-df = getBusLocationsDF(busDict)
-#Convert bus GPS coords to lists of latitudes and longitudes
 
-#makeMap(lats, longs)
-makeCartopyMap(df)
+if __name__ == '__main__':
+    #Get the bus data from the open bus data API
+    timestamp, data = getBusData(datafeedID)
+    busDict = getBusLocationsDict(data)
+    df = getBusLocationsDF(busDict)
+    #Convert bus GPS coords to lists of latitudes and longitudes
+
+    #makeMap(lats, longs)
+    makeCartopyMap(df)

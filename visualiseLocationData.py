@@ -90,7 +90,3 @@ def plotLatLong(busLocationDict):
     plt.show()
 
 #allIDs(routeIDs)
-
-timestamp, data = getBusData(routeID)
-busDict = getBusLocationsDict(data)
-getAllAttributes(busDict)
