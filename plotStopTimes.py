@@ -71,16 +71,34 @@ def getHoursMins(datetime):
     return hour, minute
 
 def plotStopTimes(filename, locations):
-
+    accuracy = 4
+    truncatedStopLocations = [[round(i, accuracy) for i in stop] for stop in locations]
     df = LoadLocationData(filename)
-
-    hours, mins = [], []
+    busDict = df.to_dict()
+    times = []
+    IDs = []
+    stops = {}
+    for time, bus in busDict.items():
+        for busID, location in bus.items():
+            if type(location) == list:
+                location = [round(i, accuracy) for i in list(map(float, location))]
+                if location in truncatedStopLocations:
+                    stops[time] = [busID, location]
+    
+    return stops
+            
+            
+                
+                
+            
+    '''hours, mins = [], []
     for location in locations:
         LinesTimes = getIndexOfDF(df, location)
         #print(LinesTimes)
         hour, minute = getHoursMins(LinesTimes(1))
         hours.append(hour)
         mins.append(minute)
-        plt.scatter(hours, mins, s=10)
+        plt.scatter(hours, mins, s=10)'''
 
-plotStopTimes('LocationDataLog19-10-2021,18;16;05RunTime28800.json',[51.476441, -2.699206])
+stops = plotStopTimes('LocationDataLog19-10-2021,18;16;05RunTime28800.json',[[51.453000, -2.600830]])
+print(stops)
