@@ -1,82 +1,24 @@
 import matplotlib.pyplot as plt
 from LoadLocationData import LoadLocationData
 from getLineIds import LineIds
-import pandas as pd
-import numpy as np
 
-def getDictOfLineLatLongTime(matchIDstoLines, LoadLocationData, filename, filenameLines):
+def getSingleLine(df, line):
 
-    LineLatLongTimeDict = {}
-    
-    IDsforLines = matchIDstoLines(filename, filenameLines)
+    AllLineIds = LineIds()
+    IdsForLine = AllLineIds[line]
+    dfLine = df.loc[IdsForLine]
 
-    df, dfLines, dataAtTimes = LoadLocationData(filename, filenameLines)
-    print(pd.DataFrame(data=dataAtTimes))
-    print(pd.DataFrame(data=IDsforLines))
+    return dfLine
 
-    for key, busId in IDsforLines.items():
-        #print(key)
-        #print(busId)
-        LineLatLongTimeDict.setdefault(key)
-        for time, busData in dataAtTimes.items():
-            for id, loc in busData.items():
-                #append dataAtTimes for id to key that matches with busId
-                #line = list(IDsforLines.keys())[list(IDsforLines.values()).index(id)]
-                miniTimeLocDict = {}
-                if id in busId:
-                    locList = id
-                miniTimeLocDict[time] = loc
-        LineLatLongTimeDict[key] = miniTimeLocDict
-
-    #print(LineLatLongTimeDict)
-
-    return LineLatLongTimeDict
-
-def getIndexOfDF(df, value):
-     
-    # Empty list
-    listOfPos = []
-     
-    # isin() method will return a dataframe with
-    # boolean values, True at the positions
-    # where element exists
-    result = df.isin([value])
-    #result = df[df.str.contains('|'.join(value))]
-     
-    # any() method will return
-    # a boolean series
-    seriesObj = result.any()
- 
-    # Get list of column names where
-    # element exists
-    columnNames = list(seriesObj[seriesObj == True].index)
-    
-    # Iterate over the list of columns and
-    # extract the row index where element exists
-    for col in columnNames:
-        rows = list(result[col][result[col] == True].index)
- 
-        for row in rows:
-            listOfPos.append((row, col))
-             
-    # This list contains a list tuples with
-    # the index of element in the dataframe
-    return listOfPos
-
-def getHoursMins(datetime):
-    splitted = [char for char in str(datetime)]
-    hour = int(splitted[11]+splitted[12])
-    minute = int(splitted[14]+splitted[15])+float(splitted[17]+splitted[18])/60
-    
-    return hour, minute
-
-def plotStopTimes(filename, locations):
+def getTimeFromLocation(filename, locations, line):
     accuracy = 4
     truncatedStopLocations = [[round(i, accuracy) for i in stop] for stop in locations]
     df = LoadLocationData(filename)
-    busDict = df.to_dict()
+    
+    dfLine = getSingleLine(df, line)
+
+    busDict = dfLine.to_dict()
     times = []
-    IDs = []
     stops = {}
     for time, bus in busDict.items():
         for busID, location in bus.items():
@@ -84,21 +26,35 @@ def plotStopTimes(filename, locations):
                 location = [round(i, accuracy) for i in list(map(float, location))]
                 if location in truncatedStopLocations:
                     stops[time] = [busID, location]
-    
-    return stops
-            
-            
-                
-                
-            
-    '''hours, mins = [], []
-    for location in locations:
-        LinesTimes = getIndexOfDF(df, location)
-        #print(LinesTimes)
-        hour, minute = getHoursMins(LinesTimes(1))
-        hours.append(hour)
-        mins.append(minute)
-        plt.scatter(hours, mins, s=10)'''
 
-stops = plotStopTimes('LocationDataLog19-10-2021,18;16;05RunTime28800.json',[[51.453000, -2.600830]])
-print(stops)
+    times = stops.keys()
+
+    return times
+
+def getHoursMins(datetime):
+    splitted = [char for char in str(datetime)]
+    minute = int(splitted[14]+splitted[15])+float(splitted[17]+splitted[18])/60
+    hour = int(splitted[11]+splitted[12])+minute/60
+    
+    return hour, minute
+
+def useAllDaysData(code):
+
+    some = code
+
+    return some
+
+def plotStopTimes(filename, locations, line):
+
+    times = getTimeFromLocation(filename, locations, line)
+    hours, mins = [], []
+    for time in times:
+        hour, min = getHoursMins(time)
+        hours.append(hour)
+        mins.append(min)
+    plt.scatter(hours, mins, s=10)
+    plt.xlabel('Hour of day')
+    plt.ylabel('Minute')
+    plt.show()
+
+plotStopTimes('LocationDataLog19-10-2021,18;16;05RunTime28800.json',[[51.453000, -2.600830]],'2a')

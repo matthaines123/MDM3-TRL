@@ -15,3 +15,12 @@ def LoadLocationData(filename):
         df = pd.DataFrame(data = dataAtTimes)
 
     return df
+
+def merge_JsonFiles(filename, outputFilename):
+    result = list()
+    for f1 in filename:
+        with open(f1, 'r') as infile:
+            result.extend(json.load(infile))
+
+    with open(outputFilename, 'w') as output_file:
+        json.dump(result, output_file)
