@@ -1,6 +1,8 @@
 from LoadLocationData import LoadLocationData
 import matplotlib.pyplot as plt
 import random
+import pandas as pd
+import numpy as np
 
 def getChosenBusRoutes(dataAtTimes, busId):
 
@@ -22,27 +24,40 @@ def getChosenBusRoutes(dataAtTimes, busId):
         busLocationData = {k: dataAtSingleTime[k] for k in busId}
         chosenBusRoutesDict[time] = busLocationData
 
-    chosenBusRoutesDict
+    chosenBusRoutesDF = pd.DataFrame(data = chosenBusRoutesDict)
 
-    return chosenBusRoutesDict
+    return chosenBusRoutesDF, chosenBusRoutesDict
     
 def plotTrajectory(dataAtTimes, busId):
 
     ''' Plot the trajectory of a bus 
         by plotting the longitude and latitude of a bus over the location data time input '''
 
-    locationDict = getChosenBusRoutes(dataAtTimes, busId)
-
+    locationDF, locationDict = getChosenBusRoutes(dataAtTimes, busId)
+    """
     lats, longs = [], []
     for key, vals in locationDict.items():
+        #print(vals)
         valdict = vals
         for key, val in valdict.items():
+            #print(key)
             lats.append(float(val[0]))
             longs.append(float(val[1]))
-
-    plt.scatter(longs, lats, s=10, alpha=0.01)
+            plt.scatter(longs, lats, s=10, alpha=0.05, c=np.random.rand(3))
+    """
+    for Id, loc in locationDF.iterrows():
+        lats, longs = [], []
+        #print(loc)
+        for latlong in loc:
+            #print(latlong)
+            lats.append(latlong[0])
+            longs.append(latlong[1])
+        #print(lats)
+        plt.scatter(longs, lats, s=10, alpha=0.05, c=np.random.rand(3))
+    
     plt.show()
 
-#dfdataAtTimes, dataLines, dataAtTimes = LoadLocationData('LocationDataLog19-10-2021,18;16;05RunTime28800.json','LineReferences20-10-2021,20;58;28RunTime60.json')
 dfdataAtTimes = LoadLocationData('LocationDataLog19-10-2021,18;16;05RunTime28800.json')
-plotTrajectory(dfdataAtTimes, 4)
+plotTrajectory(dfdataAtTimes, 1)
+
+#### COLOUR CODE #####
