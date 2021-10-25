@@ -2,7 +2,7 @@ from getLocationData import getBusData
 from visualiseLocationData import getBusLocationsDict
 import time
 
-def logLocationData(getBusData, code, runTime):
+def logLocationData(getBusData, code, runTime, api_key):
 
     ''' For a given length of time to repeatadly get the live location data
         stored in a dictionary with each time as the key '''
@@ -15,7 +15,7 @@ def logLocationData(getBusData, code, runTime):
     startTimer = time.time()
 
     while Timer < runTime:
-        timestamp, busData = getBusData(code)
+        timestamp, busData = getBusData(code,api_key)
         dataAtTimes[timestamp] = busData
         Timer = time.time() - startTimer
 

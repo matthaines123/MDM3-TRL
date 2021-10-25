@@ -4,12 +4,12 @@ from getLocationDataAtTimes import logLocationData, getBusLocationwtimes
 import json
 from datetime import datetime, timedelta
 
-def SaveLocationData(getBusData, code, runTime, getBusLocationsDict):
+def SaveLocationData(getBusData, code, runTime, getBusLocationsDict, api_key):
 
     ''' Saves the latitude and longitude of the live location data
         for each 5 second live bus data update over a set period of time. '''
 
-    dataAtTimes, runTime = logLocationData(getBusData, code, runTime)
+    dataAtTimes, runTime = logLocationData(getBusData, code, runTime, api_key)
     busTimeLocationDict = getBusLocationwtimes(dataAtTimes, getBusLocationsDict)
     runTime = str(runTime)
     #runTime = str(timedelta(seconds=runTime))
@@ -19,4 +19,4 @@ def SaveLocationData(getBusData, code, runTime, getBusLocationsDict):
     with open('Location_Data_files/' + filename, 'w') as fp:
         json.dump(busTimeLocationDict, fp)
 
-SaveLocationData(getBusData, 699, 60, getBusLocationsDict)
+SaveLocationData(getBusData, 699, 12*60*60, getBusLocationsDict, api_key)
