@@ -19,10 +19,11 @@ def LoadFile(filename):
 
 def LineIds():
 
-    LineRefDF = LoadFile('LineReferences20-10-2021,20;58;28RunTime60.json')
-    LineRefs = LineRefDF['2021-10-20T19:57:27.342845+00:00']
+    LineRefDF = LoadFile('LineReferences26-10-2021,19;40;41RunTime25200.json')
+    LineRefs = LineRefDF.iloc[:,0]
+    LineRefs = LineRefs.dropna(axis=0)
     LineRefDict = defaultdict(list)
-    for i in range(468):
+    for i in range(len(LineRefs)-1):
         LineRefDict[LineRefs[i][0]].append(LineRefs.index.values[i])
 
     return LineRefDict

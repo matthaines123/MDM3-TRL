@@ -19,4 +19,5 @@ def SaveLocationData(getBusData, code, runTime, getBusLocationsDict, api_key):
     with open('Location_Data_files/' + filename, 'w') as fp:
         json.dump(busTimeLocationDict, fp)
 
-SaveLocationData(getBusData, 699, 12*60*60, getBusLocationsDict, api_key)
+SaveLocationData(getBusData, 699, 60, getBusLocationsDict,api_key='insert here')
+# Owen's '650cd0e54ace986812d1b6a78e856c3d45bedd5a'
