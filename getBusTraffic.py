@@ -4,14 +4,17 @@ import numpy as np
 
 
 def checkGate(trafficData, busData):
-    accuracy = 5
+    accuracy = 4
+    print(busData.shape[0])
+    print(busData.head())
     #Accuracy 4 = 10m, accuracy 5  = 1m
     truncatedTraffic = [[round(i, accuracy) for i in location] for location in trafficData]
     #truncatedBus = [[round(float(i), accuracy) for i in location] for location in busData.to_numpy().flatten()]
+    print(np.size(busData.to_numpy()))
     truncatedBus = []
     for location in busData.to_numpy().flatten():
         newPair = []
-        if type(location) != float: 
+        if type(location) != float:
             for i in location:
                 roundedValue = round(float(i), accuracy)
                 newPair.append(roundedValue)
