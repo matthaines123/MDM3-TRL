@@ -5,7 +5,7 @@ import xmltodict
 by the datafeed ID. This can be found on the gov open data website'''
 
 #First Bus = datafeedID: 2905
-def getBusData(datafeedID, api_key):
+def getBusData(datafeedID, api_key, lastTimestamp, lastBusData):
     parameters = {
         'operatorName = FirstBus'
     }
@@ -19,6 +19,8 @@ def getBusData(datafeedID, api_key):
     #Checking response, 200 is a success
     if response.status_code != 200:
         print("Error could not access data")
+        timestamp = lastTimestamp
+        busDataList = lastBusData
     else:
 
         #Getting data in dictionary form

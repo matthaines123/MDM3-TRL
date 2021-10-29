@@ -14,8 +14,13 @@ def logLocationData(getBusData, code, runTime, api_key):
     Timer = 0
     startTimer = time.time()
 
+    lastTimestamp = 0
+    lastBusData = []
+
     while Timer < runTime:
-        timestamp, busData = getBusData(code,api_key)
+        timestamp, busData = getBusData(code,api_key, lastTimestamp, lastBusData)
+        lastTimestamp = timestamp
+        lastBusData = busData
         dataAtTimes[timestamp] = busData
         Timer = time.time() - startTimer
 
