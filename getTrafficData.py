@@ -8,16 +8,16 @@ import pandas as pd
 import numpy as np
 
 def getTrafficGates():
-    df = pd.read_json("dim-journey-links.json")
-
     data = json.load(open("dim-journey-links.json"))
-    data = data[0]
-    coordinates = np.array(data['fields']['geo_shape']['coordinates'])
-    new_coordinates = []
-    for pair in coordinates:
-        new_coordinates.append([pair[1], pair[0]])
-    return new_coordinates
+    coordinates = np.zeros((2,2, len(data)))
+    for i in range(len(data)):
+        coordinates[0, 0, i] = np.array(data[i]['fields']['geo_shape']['coordinates'][0][1])
+        coordinates[0, 1, i] = np.array(data[i]['fields']['geo_shape']['coordinates'][0][0])
+        coordinates[1, 0, i] = np.array(data[i]['fields']['geo_shape']['coordinates'][-1][1])
+        coordinates[1, 1, i] = np.array(data[i]['fields']['geo_shape']['coordinates'][-1][0])
+    return coordinates
 
+"""
 def main(coordinates):
     imagery = OSM()
     lats = list(map(float, coordinates[:, 1]))
@@ -33,8 +33,10 @@ def main(coordinates):
 
     ax.plot(longs, lats, transform=ccrs.PlateCarree(), marker=circle, color='red', markersize=10, linestyle='', alpha=0.5)
     plt.show()
-
+"""
 
 
 if __name__ == '__main__':
     coordinates = getTrafficGates()
+    print(coordinates[:, :, 5])
+    #main(coordinates)
