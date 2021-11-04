@@ -20,6 +20,7 @@ def plotRoutes(coordsDict):
         try:
             G = ox.graph_from_point([coord[0][1], coord[0][0]], dist=1000, network_type='drive')
 
+            
 
             G = ox.speed.add_edge_speeds(G)
             G = ox.speed.add_edge_travel_times(G)
@@ -28,14 +29,28 @@ def plotRoutes(coordsDict):
             end = ox.get_nearest_node(G, [coord[1][1], coord[1][0]])
 
             route = nx.shortest_path(G, start, end, 'travel_time')
+            
+            bbox = getbboxOfSection(route, G)
+
 
             route_map = ox.plot_route_folium(G, route)
-            routes[key] = [route, route_map]
+            routes[key] = [bbox, route_map]
             counter += 1
         except nx.exception.NetworkXNoPath:
             counter += 1
         
     return routes
+
+def getbboxOfSection(route, G):
+    longs = []
+    lats = []
+    for node in route:
+        longs.append(G.nodes[node]['x'])
+        lats.append(G.nodes[node]['y'])
+
+    bbox = [[min(longs),max(longs)], [min(lats), max(lats)]]
+    return bbox
+
 
 def displayRoadSection(coordDict, routeDict, name):
     for roadName, coords in coordDict.items():
@@ -60,8 +75,8 @@ def getANPRCoords(file, limit):
 
 
 if __name__ == '__main__':
-    anprCoords = getANPRCoords(ANPRFILE, 240)
+    anprCoords = getANPRCoords(ANPRFILE, 3)
     routes = plotRoutes(anprCoords)
-    roadName = 'all'
-    displayRoadSection(anprCoords, routes, roadName)
+    roadName = 'Bath'
+    #displayRoadSection(anprCoords, routes, roadName)
     
