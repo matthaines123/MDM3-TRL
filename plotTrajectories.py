@@ -81,6 +81,6 @@ def plotTrajectory(dataAtTimes, busId):
 
 if __name__ == '__main__':
     dataAtTimes = LoadLocationData('LocationDataLog19-10-2021,18;16;05RunTime28800.json')
-    busesDf = reduceBusesDf(dataAtTimes, 1)
+    busesDf = reduceBusesDf(dataAtTimes, 3)
     makeCartopyMap(busesDf)
     
