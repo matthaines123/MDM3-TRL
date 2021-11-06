@@ -1,20 +1,24 @@
 import matplotlib.pyplot as plt
 from matplotlib.path import Path
 import json
+from LoadLocationData import LoadLocationData
 import cartopy.crs as ccrs
 from cartopy.io.img_tiles import OSM
 import pandas as pd
 import numpy as np
 
-df = pd.read_json(r"C:\Users\IsaacEvans\Documents\MDM\MDM3-TRL\dim-journey-links.json")
+def getTrafficGates():
+    data = json.load(open("dim-journey-links.json"))
+    coordinates = np.zeros((2,2, len(data)))
+    for i in range(len(data)):
+        coordinates[0, 0, i] = np.array(data[i]['fields']['geo_shape']['coordinates'][0][1])
+        coordinates[0, 1, i] = np.array(data[i]['fields']['geo_shape']['coordinates'][0][0])
+        coordinates[1, 0, i] = np.array(data[i]['fields']['geo_shape']['coordinates'][-1][1])
+        coordinates[1, 1, i] = np.array(data[i]['fields']['geo_shape']['coordinates'][-1][0])
+    return coordinates
 
-data = json.load(open(r"C:\Users\IsaacEvans\Documents\MDM\MDM3-TRL\dim-journey-links.json"))
-data = data[0]
-coordinates = np.array(data['fields']['geo_shape']['coordinates'])
-
-print(coordinates)
-
-def main():
+"""
+def main(coordinates):
     imagery = OSM()
     lats = list(map(float, coordinates[:, 1]))
     longs = list(map(float, coordinates[:,0]))
@@ -29,8 +33,10 @@ def main():
 
     ax.plot(longs, lats, transform=ccrs.PlateCarree(), marker=circle, color='red', markersize=10, linestyle='', alpha=0.5)
     plt.show()
-
+"""
 
 
 if __name__ == '__main__':
-    main()
+    coordinates = getTrafficGates()
+    print(coordinates[:, :, 5])
+    #main(coordinates)
