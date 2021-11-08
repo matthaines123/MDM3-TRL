@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 from matplotlib.path import Path
 import json
 from LoadLocationData import LoadLocationData
-import cartopy.crs as ccrs
-from cartopy.io.img_tiles import OSM
+#import cartopy.crs as ccrs
+#from cartopy.io.img_tiles import OSM
 import pandas as pd
 import numpy as np
 
@@ -16,6 +16,16 @@ def getTrafficGates():
         coordinates[1, 0, i] = np.array(data[i]['fields']['geo_shape']['coordinates'][-1][1])
         coordinates[1, 1, i] = np.array(data[i]['fields']['geo_shape']['coordinates'][-1][0])
     return coordinates
+
+def CheckMatches(time, RoadName):
+    TrafficData = json.load(open("fact-journey-hourly.json"))
+    Matches = []
+    for i in range(len(TrafficData)):
+        if time == TrafficData[i]['fields']['rollupdatetime'] and RoadName == TrafficData[i]['fields']['journeystartclean']:
+            Matches.append({'Time' : time, 'RoadName' : RoadName})
+    return Matches
+Matches = CheckMatches("2021-10-18T14:00:00+01:00", "Redcliffe Way")
+print(Matches)
 
 """
 def main(coordinates):
@@ -34,9 +44,3 @@ def main(coordinates):
     ax.plot(longs, lats, transform=ccrs.PlateCarree(), marker=circle, color='red', markersize=10, linestyle='', alpha=0.5)
     plt.show()
 """
-
-
-if __name__ == '__main__':
-    coordinates = getTrafficGates()
-    print(coordinates[:, :, 5])
-    #main(coordinates)
