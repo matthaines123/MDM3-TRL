@@ -213,7 +213,7 @@ for fileName in FileNameList:
 # ReadPKL('TimetableDic.pkl', 'rb')
 
 '''Load dictionary from .pkl file without losing original variable type '''
-# File = open('TimetableDic.pkl', 'rb')
-# Dic = pickle.load(File)
-# dict(Dic)
-# print(type(Dic))
+File = open('TimetableDic.pkl', 'rb')
+Dic = pickle.load(File)
+dict(Dic)
+print(Dic)
