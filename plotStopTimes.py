@@ -76,8 +76,10 @@ def plotStopTimes(leaveTimeList, stopName, line, direction):
         minute = getMinute(time)
         hours.append(time)
         mins.append(minute)
-    #plt.scatter(hours, np.zeros_like(hours) + 0, s=10, c='b')
-    plt.scatter(hours, mins, s=10, c='b')
+    hours = [item for sublist in hours for item in sublist]
+    mins = [item for sublist in mins for item in sublist]
+    plt.scatter(hours, np.zeros_like(hours) + 0, s=10, c='b')
+    #plt.scatter(hours, mins, s=10, c='b')
     plt.xlabel('Hour of the day')
     plt.ylabel('Minute')
     plt.title('Line: '+line+', direction: '+direction+', stop: '+stopName)
@@ -117,8 +119,8 @@ def plotTimetable(timetable):
         min = getMinute(time)
         hours.append(time)
         mins.append(min)
-    #plt.scatter(hours,np.zeros_like(hours) + 0,s=40,c='k',marker='*')
-    plt.scatter(hours,mins,s=40,c='k',marker='*')
+    plt.scatter(hours,np.zeros_like(hours) + 0,s=40,c='k',marker='*')
+    #plt.scatter(hours,mins,s=40,c='k',marker='x')
     plt.legend('Estimated arrival times')
 
 def produceTimetable():
