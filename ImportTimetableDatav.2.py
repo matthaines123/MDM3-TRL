@@ -1,7 +1,7 @@
 # To add
 # - show inbound and outbound
 # - Auto covert every 15 mins to numbers
-import pickle
+import pickle  # Import module pickle for saving dictionary
 import os
 import string
 from ReadPKL import ReadPKL
@@ -93,7 +93,7 @@ def getTimetable(FileName):
         else:
             TimetableDic[StopName] = TimeList
     # print(str(TimetableDic['Broadmead Union Street (B16)']))
-    LineDic[int(BusNum)] = TimetableDic
+    LineDic[BusNum] = TimetableDic
     return LineDic
 
 
@@ -112,10 +112,17 @@ def FindRecurrentTime(List):
     Count = 0
     while Count < len(List):
         i = List[Count]
-        if i.isnumeric() == 0 and ':' not in i:
+        if i == '':
+            Count += 1
+        elif i.isnumeric() == 0 and ':' not in i:
             Recurrent = i.split(' ')
             for j in Recurrent:
-                if j.isnumeric() == 1:
+                if j == 'hourly':
+                    Pos -= 1
+                    Interval[Pos] = '60'
+                    List.pop(Count)
+                    break
+                elif j.isnumeric() == 1:
                     Pos -= 1
                     Interval[Pos] = j
                     List.pop(Count)
@@ -184,10 +191,10 @@ def InsertRepeatTimeList(Dictionary, TimeList):
 def WriteDic(Dictionary):
     with open('TimetableDic.pkl', 'a+b') as file:
         pickle.dump(Dictionary, file)
-        # pass
     with open('TimetableDic.txt', 'a') as file:
         for key in Dictionary:
             ListwithKey = Dictionary[key]
+            file.writelines(str(key) + '\n')
             for k in ListwithKey:
                 List = ListwithKey[k]
                 file.writelines(str(k) + '\n')
@@ -196,11 +203,13 @@ def WriteDic(Dictionary):
 
 # FileName = '1-NorthBound-BroomhillWhitmoreAvenue-CribbsCausewayBusStation.txt'
 FileNameList = [
-    '1-NorthBound-BroomhillWhitmoreAvenue-CribbsCausewayBusStation.txt',
-    '1-SouthBound-CribbsCausewayBusStation-BroomhillWhitmoreAvenue.txt',
-    '2-SouthBound-CribbsCauseway-Stockwood',
-    '2-SouthBound-Stockwood-CribbsCauseway',
-    '73-Northbound-BristolTempleMeadsStation-CribbsCausewayBusStation.txt'
+    # '1-NorthBound-BroomhillWhitmoreAvenue-CribbsCausewayBusStation.txt',
+    # '1-SouthBound-CribbsCausewayBusStation-BroomhillWhitmoreAvenue.txt',
+    # '2-SouthBound-CribbsCauseway-Stockwood',
+    # '2-SouthBound-Stockwood-CribbsCauseway',
+    # '73-Northbound-BristolTempleMeadsStation-CribbsCausewayBusStation.txt',
+    # '73-SouthBound-CribbsCausewayBusStation-BristolTempleMeadsStation',
+    'U2-NorthBound-UniversityofBristolLangfordCampus-CentreRupertStreet'
     ]
 # FileName = '73-Northbound-BristolTempleMeadsStation-CribbsCausewayBusStation.txt'
 # Bound = 'Outbound'
@@ -215,5 +224,5 @@ for fileName in FileNameList:
 '''Load dictionary from .pkl file without losing original variable type '''
 File = open('TimetableDic.pkl', 'rb')
 Dic = pickle.load(File)
-dict(Dic)
-print(Dic)
+# dict(Dic)
+# print(Dic)
