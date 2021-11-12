@@ -47,7 +47,8 @@ def getStopLocations():
 
     return operatorDict
 
-
+d = getStopLocations()
+print(d['1'])
 
 
             

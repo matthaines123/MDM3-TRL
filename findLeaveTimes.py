@@ -57,7 +57,10 @@ def getStopLatLong(stopLocations, stopName, line, direction):
     return loc
 
 def findLeaveTimes(filename, stopLocations, stopName, line, direction):
-    location = getStopLatLong(stopLocations, stopName, line, direction)
+    if stopLocations == 'find' or stopLocations == 'Find':
+        location = getStopLatLong(stopLocations, stopName, line, direction)
+    else:
+        location = stopLocations
     times = getTimeFromLocation(filename, location, line)
     leaveTimes = getLeaveStopTime(times)
     return leaveTimes
@@ -74,8 +77,9 @@ def iterateThroughFiles(filenames, stopLocations, stopName, line, direction):
     times = [item for sublist in times for item in sublist]
     return times
 
-def leaveTimes(filenames, stopName, line, direction):
-    stopLocations = getStopLocations()
+def leaveTimes(filenames, stopName, line, direction, stopLocations):
+    if stopLocations == 'find' or stopLocations == 'Find':
+        stopLocations = getStopLocations()
     if line == 'All' or line == 'all':
         times = defaultdict(list)
         linesAtStop = []
