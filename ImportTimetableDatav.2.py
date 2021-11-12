@@ -202,17 +202,29 @@ def WriteDic(Dictionary):
 
 
 # FileName = '1-NorthBound-BroomhillWhitmoreAvenue-CribbsCausewayBusStation.txt'
-FileNameList = [
-    # '1-NorthBound-BroomhillWhitmoreAvenue-CribbsCausewayBusStation.txt',
-    # '1-SouthBound-CribbsCausewayBusStation-BroomhillWhitmoreAvenue.txt',
-    # '2-SouthBound-CribbsCauseway-Stockwood',
-    # '2-SouthBound-Stockwood-CribbsCauseway',
-    # '73-Northbound-BristolTempleMeadsStation-CribbsCausewayBusStation.txt',
-    # '73-SouthBound-CribbsCausewayBusStation-BristolTempleMeadsStation',
-    'U2-NorthBound-UniversityofBristolLangfordCampus-CentreRupertStreet'
-    ]
+# FileNameList = [
+#     # '1-NorthBound-BroomhillWhitmoreAvenue-CribbsCausewayBusStation.txt',
+#     # '1-SouthBound-CribbsCausewayBusStation-BroomhillWhitmoreAvenue.txt',
+#     # '2-SouthBound-CribbsCauseway-Stockwood',
+#     # '2-SouthBound-Stockwood-CribbsCauseway',
+#     # '73-Northbound-BristolTempleMeadsStation-CribbsCausewayBusStation.txt',
+#     # '73-SouthBound-CribbsCausewayBusStation-BristolTempleMeadsStation',
+#     'U2-NorthBound-UniversityofBristolLangfordCampus-CentreRupertStreet'
+#     ]
 # FileName = '73-Northbound-BristolTempleMeadsStation-CribbsCausewayBusStation.txt'
 # Bound = 'Outbound'
+
+MyPath = ('RawTimetableData')
+FileNameList = [f for f in os.listdir(MyPath) if os.path.isfile(os.path.join(MyPath, f))]
+Count = 0
+while True:
+    if Count >= len(FileNameList):
+        break
+    if 'txt' not in FileNameList[Count] or FileNameList[Count] == 'TimetableDic.txt':
+        FileNameList.pop(Count)
+    else:
+        Count += 1
+
 os.chdir('RawTimetableData')
 for fileName in FileNameList:
     Timetable = getTimetable(fileName)
