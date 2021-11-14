@@ -46,21 +46,17 @@ def getLeaveStopTime(times):
             leaveTimes.append(decTimeList[i])
     return leaveTimes
 
-def getStopLatLong(stopLocations, stopName, line, direction):
-    if direction == 'inbound' or direction == 'southbound' or direction == 'citybound':
-        dir = 1
-    else:
-        dir = 0
+def getStopLatLong(stopLocations, stopName, line, dir):
     forDirection = stopLocations[line][dir]
     forStop = forDirection[forDirection['Name']==stopName]
     loc = [float(forStop['Lat'].to_list()[0]),float(forStop['Long'].to_list()[0])]
     return loc
 
 def findLeaveTimes(filename, stopLocations, stopName, line, direction):
-    if stopLocations == 'find' or stopLocations == 'Find':
-        location = getStopLatLong(stopLocations, stopName, line, direction)
+    if len(stopLocations) == 2:
+        location = [float(x) for x in stopLocations]
     else:
-        location = stopLocations
+        location = getStopLatLong(stopLocations, stopName, line, direction)
     times = getTimeFromLocation(filename, location, line)
     leaveTimes = getLeaveStopTime(times)
     return leaveTimes
@@ -77,19 +73,14 @@ def iterateThroughFiles(filenames, stopLocations, stopName, line, direction):
     times = [item for sublist in times for item in sublist]
     return times
 
-def leaveTimes(filenames, stopName, line, direction, stopLocations):
+def leaveTimes(filenames, stopName, lines, direction, stopLocations):
+    if direction == 'inbound' or direction == 'southbound' or direction == 'citybound':
+        dir = 1
+    else:
+        dir = 0
     if stopLocations == 'find' or stopLocations == 'Find':
         stopLocations = getStopLocations()
-    if line == 'All' or line == 'all':
-        times = defaultdict(list)
-        linesAtStop = []
-        for item in stopLocations.keys():
-            if stopName in list(stopLocations[item][dir]['Name']):
-                forDirection = stopLocations[item][dir]
-                forStop = forDirection[forDirection['Name']==stopName]
-                linesAtStop.append(item)
-        for item in linesAtStop:
-            times[item] = iterateThroughFiles(filenames, stopLocations, stopName, item, direction)
-    else:
-        times = iterateThroughFiles(filenames, stopLocations, stopName, line, direction)
+    times = defaultdict(list)
+    for item in lines:
+        times[item] = iterateThroughFiles(filenames, stopLocations, stopName, item, dir)
     return times

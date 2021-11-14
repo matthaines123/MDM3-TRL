@@ -18,20 +18,35 @@ def findLateness(timetable, times):
             lateness.append(-minute)
     return lateness
 
-def findMeanPunct(timetable, times, line):
-    if line == 'all' or line == 'All':
-        lateness = []
-        exactHours = []
-        for item in list(times.keys()):
-            latenessSingle = findLateness(timetable, item)
-            exactHoursSingle = [np.floor(i) for i in item]
-            lateness.append(latenessSingle)
-            exactHours.append(exactHoursSingle)
-        lateness = [item for sublist in lateness for item in sublist]
-        exactHours = [item for sublist in exactHours for item in sublist]
-    else:
-        lateness = findLateness(timetable, times)
-        exactHours = [np.floor(item) for item in times]
+def findMeanPunct(timetable, times, lines):
+    lateness = []
+    exactHours = []
+    for item in lines:
+        latenessSingle = findLateness(timetable[item], times[item])
+        exactHoursSingle = [np.floor(i) for i in times[item]]
+        lateness.append(latenessSingle)
+        exactHours.append(exactHoursSingle)
+    lateness = [item for sublist in lateness for item in sublist]
+    exactHours = [item for sublist in exactHours for item in sublist]
+    eachHour = np.unique(np.array(exactHours))
+    latenessDict = defaultdict(list)
+    for key,value in zip(exactHours,lateness):
+        latenessDict[key].append(value)
+    means = []
+    for key,value in latenessDict.items():
+        means.append(sum(value)/len(value))
+    return eachHour, means
+
+def getMoreBars(timetable, times, lines):
+    lateness = []
+    exactHours = []
+    for item in lines:
+        latenessSingle = findLateness(timetable[item], times[item])
+        exactHoursSingle = [np.floor(i*4) for i in times[item]]
+        lateness.append(latenessSingle)
+        exactHours.append(exactHoursSingle)
+    lateness = [item for sublist in lateness for item in sublist]
+    exactHours = [item for sublist in exactHours for item in sublist]
     eachHour = np.unique(np.array(exactHours))
     latenessDict = defaultdict(list)
     for key,value in zip(exactHours,lateness):

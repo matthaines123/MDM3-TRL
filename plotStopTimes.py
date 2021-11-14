@@ -34,6 +34,7 @@ if __name__ == '__main__':
     busStopName = 'Filton Avenue, Lockleaze Road'
     # Single bus line or all
     line = '73'
+    # inbound/southbound or outbound/northbound
     direction = 'inbound'
     # Can either find this or put in the lat/longs
     stopLocations = 'find'
