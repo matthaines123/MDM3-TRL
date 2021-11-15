@@ -6,7 +6,7 @@ from LoadLocationData import LoadLocationData
 #from cartopy.io.img_tiles import OSM
 import pandas as pd
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def getTrafficGates():
     data = json.load(open("dim-journey-links.json"))
@@ -24,7 +24,8 @@ def CheckMatches(time, RoadName):
     for section in TrafficData: 
         if time in section['fields']['rollupdatetime'] and RoadName in section['fields']['journeystartclean']:
             name = section['fields']['journeystartclean'] + ':' + section['fields']['journeystartdirectiondesc']
-            Matches.append([name,section['fields']['weightedavgspeed']])
+            Matches = [name,section['fields']['weightedavgspeed']]
+    #print(Matches)
     return Matches
 
 def roundToHour(time):
@@ -32,9 +33,26 @@ def roundToHour(time):
     time = time[0].replace('T',  ' ')
     return str(datetime.fromisoformat(time).replace(microsecond=0, second=0, minute=0))
 
+def getTrafficForRange(timeRange, road, date):
+    i = timeRange[0]
+    speeds = []
+    while i != timeRange[1]:
+        delta = i-timeRange[0]
+
+        newDate = date + timedelta(hours=delta)
+        match = CheckMatches(str(newDate).replace(' ', 'T'), road)
+        speed = match[1]
+        i += 1
+        speeds.append(speed)
+    return speeds
+
+
 if __name__ == '__main__':
-    Matches = roundToHour("2021-10-18T14:45:34.5343+01:00")
-    print(Matches)
+    road = 'Anchor'
+    timeRange = [8, 20]
+    date = datetime(2021, 10, 18, timeRange[0])
+    speeds = getTrafficForRange(timeRange, road, date)
+    
 
 """
 def main(coordinates):

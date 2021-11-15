@@ -6,8 +6,12 @@ import itertools
 import warnings
 import math
 import numpy as np
+from os import listdir
+from os.path import isfile, join
+import xmltodict
 from IPython.display import display
-from plotStopTimes import getDecimalTime, getMinute
+#from plotStopTimes import getDecimalTime, getMinute
+from findLeaveTimes import leaveTimes
 
 warnings.filterwarnings("ignore", category=UserWarning) 
 
@@ -203,25 +207,62 @@ def checkBusIsInGate(busCoords, anprFile, road):
             else:
                 busInGate[roadName] = [time]'''
 
-    
-    #return busInGate
+def getDistanceBetweenStops(stop1, stop2, lines, ids):
+    lineDistances = {}
+    if ids == None:
+        stopCodes = [None, None]
+        for line in lines:
+            filename = [file for file in listdir('FBRI-BRISTOL-2021-09-12-v5-BODS_V1_0') if file.split('-')[0] == line]
+            path = 'FBRI-BRISTOL-2021-09-12-v5-BODS_V1_0\%s' % filename[0]
+            with open(path, 'r') as xml_obj:
+                dict_data = xmltodict.parse(xml_obj.read())['TransXChange']
+                
+                stoppoints = dict_data['StopPoints']
+                for key, stoppoint in stoppoints.items():
+                    for point in stoppoint:
+                        if stop1 in point['CommonName']:
+                            stopCodes[0] = point['StopPointRef']
+                        elif stop2 in point['CommonName']:
+                            stopCodes[1] = point['StopPointRef']
 
+                print(stopCodes)
+    else:
+        for line in lines:
+            filename = [file for file in listdir('FBRI-BRISTOL-2021-09-12-v5-BODS_V1_0') if file.split('-')[0] == line]
+            path = 'FBRI-BRISTOL-2021-09-12-v5-BODS_V1_0\%s' % filename[0]
+            with open(path, 'r') as xml_obj:
+                dict_data = xmltodict.parse(xml_obj.read())['TransXChange']
+                routeSection = dict_data['RouteSections']['RouteSection'][0]
+                for sectionList in routeSection['RouteLink']:
+                    if sectionList['From']['StopPointRef'] == ids[0]:
+                        lineDistances[line] = sectionList['Distance']
+    return lineDistances
+
+        
 if __name__ == '__main__':
 
     #getTimeInGate('2021-10-20T19:57:27.342845+00:00', '2021-10-20T20:58:56.342845+00:00')
-
+    filenames = ['LocationDataLog19-10-2021,18;16;05RunTime28800.json']
 
     ANPRFILE = 'dim-journey-links.json'
     road = 'Anchor'
-    anprCoords, lengths = getANPRCoords(ANPRFILE, road)
-    
-    routes = plotRoutes(anprCoords)
-    
+    stop1 = 'The Centre'
+    stop2 = 'College Green'
+    lines = ['4', '3']
+    direction = 'outbound'
+    ids = ['0100BRP90326', '0100BRP90337']
+    distances = getDistanceBetweenStops(stop1, stop2, lines, ids)
+    #print(distances)
+    #anprCoords, lengths = getANPRCoords(ANPRFILE, road)
+
+    #routes = plotRoutes(anprCoords)
+
+    times1 = leaveTimes(filenames, stop1, lines, direction, 'find')
+    times2 = leaveTimes(filenames, stop2, lines, direction, 'find')
+    print(times1[lines[1]])
+    print(times2[lines[1]])
+    #for i in range(0, 23):
+
     for roadName, coords in routes.items():
         points = anprCoords[roadName]
-        
-        if road in roadName:
-            locations = getDistanceToVec(routes[roadName], [51.440739, -2.574904])
-            
-            displayRoadSection(anprCoords, routes, road, points)
-    
+
