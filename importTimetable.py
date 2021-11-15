@@ -1,10 +1,11 @@
 # To add
 # - show inbound and outbound
 # - Auto covert every 15 mins to numbers
-import pickle
+import pickle  # Import module pickle for saving dictionary
 import os
 import string
 from ReadPKL import ReadPKL
+from collections import defaultdict
 
 
 def getTimetable(FileName):
@@ -13,7 +14,7 @@ def getTimetable(FileName):
     Current = os.getcwd()
     # print(Current)
     BusNum = Name[0]
-    Bound = Name[1]
+    #Bound = Name[1]
 
     if '.txt' not in FileName:
         FileName = FileName + '.txt'
@@ -93,7 +94,7 @@ def getTimetable(FileName):
         else:
             TimetableDic[StopName] = TimeList
     # print(str(TimetableDic['Broadmead Union Street (B16)']))
-    LineDic[int(BusNum)] = TimetableDic
+    LineDic[BusNum] = TimetableDic
     return LineDic
 
 
@@ -112,10 +113,17 @@ def FindRecurrentTime(List):
     Count = 0
     while Count < len(List):
         i = List[Count]
-        if i.isnumeric() == 0 and ':' not in i:
+        if i == '':
+            Count += 1
+        elif i.isnumeric() == 0 and ':' not in i:
             Recurrent = i.split(' ')
             for j in Recurrent:
-                if j.isnumeric() == 1:
+                if j == 'hourly':
+                    Pos -= 1
+                    Interval[Pos] = '60'
+                    List.pop(Count)
+                    break
+                elif j.isnumeric() == 1:
                     Pos -= 1
                     Interval[Pos] = j
                     List.pop(Count)
@@ -133,6 +141,8 @@ def FindRepeatTime(Interval, TimeList):
         RepeatTimeList = []
         Repeat = Interval[recur]
         IntervalTimeList = [int(t) for t in Repeat]
+        if len(IntervalTimeList) == 1:
+            IntervalTimeList.insert(0,0)
         Start = TimeList[recur]
         StartTime = [int(t) for t in Start]
         End = TimeList[recur + 1]
@@ -182,12 +192,12 @@ def InsertRepeatTimeList(Dictionary, TimeList):
 
 '''Save dictionary into .pkl file (Need to import module pickle)'''
 def WriteDic(Dictionary):
-    with open('TimetableDic.pkl', 'a+b') as file:
-        pickle.dump(Dictionary, file)
-        # pass
+    #with open('TimetableDic.pkl', 'a+b') as file:
+        #pickle.dump(Dictionary, file)
     with open('TimetableDic.txt', 'a') as file:
         for key in Dictionary:
             ListwithKey = Dictionary[key]
+            file.writelines(str(key) + '\n')
             for k in ListwithKey:
                 List = ListwithKey[k]
                 file.writelines(str(k) + '\n')
@@ -195,25 +205,69 @@ def WriteDic(Dictionary):
 
 
 # FileName = '1-NorthBound-BroomhillWhitmoreAvenue-CribbsCausewayBusStation.txt'
-FileNameList = [
-    '1-NorthBound-BroomhillWhitmoreAvenue-CribbsCausewayBusStation.txt',
-    '1-SouthBound-CribbsCausewayBusStation-BroomhillWhitmoreAvenue.txt',
-    '2-SouthBound-CribbsCauseway-Stockwood',
-    '2-SouthBound-Stockwood-CribbsCauseway',
-    '73-Northbound-BristolTempleMeadsStation-CribbsCausewayBusStation.txt'
-    ]
+# FileNameList = [
+#     # '1-NorthBound-BroomhillWhitmoreAvenue-CribbsCausewayBusStation.txt',
+#     # '1-SouthBound-CribbsCausewayBusStation-BroomhillWhitmoreAvenue.txt',
+#     # '2-SouthBound-CribbsCauseway-Stockwood',
+#     # '2-SouthBound-Stockwood-CribbsCauseway',
+#     # '73-Northbound-BristolTempleMeadsStation-CribbsCausewayBusStation.txt',
+#     # '73-SouthBound-CribbsCausewayBusStation-BristolTempleMeadsStation',
+#     'U2-NorthBound-UniversityofBristolLangfordCampus-CentreRupertStreet'
+#     ]
 # FileName = '73-Northbound-BristolTempleMeadsStation-CribbsCausewayBusStation.txt'
 # Bound = 'Outbound'
-os.chdir('RawTimetableData')
-for fileName in FileNameList:
-    Timetable = getTimetable(fileName)
-    # print(Timetable)
-    WriteDic(Timetable)
 
+def getFileNameList(direction):
+    MyPath = ('RawTimetableData')
+    FileNameList = [f for f in os.listdir(MyPath) if os.path.isfile(os.path.join(MyPath, f))]
+    Count = 0
+    while True:
+        if Count >= len(FileNameList):
+            break
+        if 'txt' not in FileNameList[Count] or FileNameList[Count] == 'TimetableDic.txt':
+            FileNameList.pop(Count)
+        else:
+            Count += 1
+    NorthFileNames = FileNameList[:-6:2] + [FileNameList[-5]] + FileNameList[-4::2]
+    SouthFileNames = FileNameList[1:-6:2] + [FileNameList[-5]] + FileNameList[-3::2]
+    if direction == 'outbound' or direction == 'northbound':
+        return NorthFileNames
+    else:
+        return SouthFileNames
+
+def formatTimetable(timetable):
+    tt = {}
+    for stop in list(timetable.keys()):
+        ttSingle = []
+        for item in timetable[stop]:
+            if len(item) > 0:
+                splitted = [char for char in item]
+                minute = int(splitted[2]+splitted[3])
+                hour = int(splitted[0]+splitted[1])+(minute/60)
+                ttSingle.append(hour)
+        tt[stop] = ttSingle
+    return tt
+
+def returnTimetable(direction):
+    FileNameList = getFileNameList(direction)
+    os.chdir('RawTimetableData')
+    allTimetables = {}
+    for fileName in FileNameList:
+        Timetable = getTimetable(fileName)
+        timetable = formatTimetable(Timetable[list(Timetable.keys())[0]])
+        allTimetables[list(Timetable.keys())[0]] = timetable
+        #WriteDic(Timetable)
+    return allTimetables
+
+def onlyNeededTimetable(direction, lines, stop):
+    allTimetables = returnTimetable(direction)
+    timetable = defaultdict(list)
+    for item in lines:
+        timetable[item] = allTimetables[item][stop]
+    return timetable
 # ReadPKL('TimetableDic.pkl', 'rb')
 
 '''Load dictionary from .pkl file without losing original variable type '''
-File = open('TimetableDic.pkl', 'rb')
-Dic = pickle.load(File)
-dict(Dic)
-print(Dic)
+# File = open('TimetableDic.pkl', 'rb')
+# Dic = pickle.load(File)
+# dict(Dic)

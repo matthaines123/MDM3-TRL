@@ -1,0 +1,42 @@
+Bristol The Centre (C9)
+07:15	08:05	09:05	10:05	11:05	then hourly until	14:05	15:05	16:05	17:05	18:05
+Bristol College Green (P1)
+07:18	08:10	09:09	10:09	11:09	14:09	15:10	16:10	17:10	18:09
+Tyndall’s Park Park Street Top (U1)
+07:21	08:14	09:13	10:13	11:13	14:13	15:14	16:14	17:14	18:12
+Canon’s Marsh Jacob's Wells Road (SE-bound)
+07:23	08:16	09:14	10:14	11:14	14:14	15:16	16:16	17:17	18:14
+Hotwells Hotwell Road (W-bound)
+07:23	08:17	09:16	10:16	11:16	14:16	15:17	16:18	17:19	18:15
+Hotwells Merchants Road (S-bound)
+07:23	08:18	09:16	10:16	11:16	14:16	15:18	16:19	17:20	18:16
+Bower Ashton Winterstoke Road (W-bound)
+07:27	08:21	09:19	10:19	11:19	14:19	15:22	16:25	17:25	18:20
+Long Ashton Brookgate (SW-bound)
+07:31	08:25	09:22	10:22	11:22	14:22	15:26	16:30	17:30	18:24
+Barrow Common Lime Kiln Roundabout (SE-bound)
+07:34	08:28	09:25	10:25	11:25	14:25	15:30	16:34	17:35	18:28
+Barrow Common Yanleigh Close (SW-bound)
+07:35	08:29	09:26	10:26	11:26	14:26	15:31	16:35	17:36	18:29
+Barrow Common Winford Arms (W-bound)
+07:36	08:30	09:27	10:27	11:27	14:27	15:32	16:36	17:37	18:30
+Barrow Common Dundry Lane (SW-bound)
+07:36	08:30	09:27	10:28	11:27	14:27	15:33	16:37	17:38	18:30
+Barrow Gurney Fountain (SW-bound)
+07:38	08:32	09:29	10:29	11:29	14:29	15:34	16:38	17:39	18:32
+Barrow Gurney Hobbs Lane (SW-bound)
+07:39	08:33	09:30	10:30	11:30	14:30	15:35	16:39	17:40	18:33
+Lulsgate Bottom Airport Tavern (SW-bound)
+07:42	08:36	09:33	10:33	11:33	14:33	15:39	16:43	17:44	18:36
+Redhill Ashford Road (SW-bound)
+07:44	08:38	09:35	10:35	11:35	14:35	15:41	16:45	17:46	18:38
+Redhill Lye Hole Lane (SW-bound)
+07:45	08:39	09:36	10:36	11:36	14:36	15:42	16:46	17:47	18:39
+Wrington Cowslip Green (SW-bound)
+07:47	08:41	09:38	10:38	11:38	14:38	15:44	16:48	17:49	18:40
+Havyat Green Yew Tree Close (SW-bound)
+07:48	08:42	09:40	10:40	11:40	14:40	15:46	16:50	17:51	18:42
+Langford St Marys Gardens (NE-bound)
+07:50	08:44	09:42	10:42	11:42	14:42	15:48	16:52	17:53	18:44
+Langford Veterinary College (W-bound)
+07:53	08:47	09:45	10:45	11:45	14:45	15:51	16:55	17:56	18:46
