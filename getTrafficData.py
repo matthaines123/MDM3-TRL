@@ -6,6 +6,7 @@ from LoadLocationData import LoadLocationData
 #from cartopy.io.img_tiles import OSM
 import pandas as pd
 import numpy as np
+from datetime import datetime
 
 def getTrafficGates():
     data = json.load(open("dim-journey-links.json"))
@@ -20,12 +21,20 @@ def getTrafficGates():
 def CheckMatches(time, RoadName):
     TrafficData = json.load(open("fact-journey-hourly.json"))
     Matches = []
-    for i in range(len(TrafficData)):
-        if time == TrafficData[i]['fields']['rollupdatetime'] and RoadName == TrafficData[i]['fields']['journeystartclean']:
-            Matches.append({'Time' : time, 'RoadName' : RoadName})
+    for section in TrafficData: 
+        if time in section['fields']['rollupdatetime'] and RoadName in section['fields']['journeystartclean']:
+            name = section['fields']['journeystartclean'] + ':' + section['fields']['journeystartdirectiondesc']
+            Matches.append([name,section['fields']['weightedavgspeed']])
     return Matches
-Matches = CheckMatches("2021-10-18T14:00:00+01:00", "Redcliffe Way")
-print(Matches)
+
+def roundToHour(time):
+    time = time.split('.')
+    time = time[0].replace('T',  ' ')
+    return str(datetime.fromisoformat(time).replace(microsecond=0, second=0, minute=0))
+
+if __name__ == '__main__':
+    Matches = roundToHour("2021-10-18T14:45:34.5343+01:00")
+    print(Matches)
 
 """
 def main(coordinates):

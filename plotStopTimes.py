@@ -5,6 +5,7 @@ from LoadLocationData import LoadLocationData
 from getLineIds import LineIds
 import numpy as np
 from getStopLocations import getStopLocations
+from datetime import datetime
 
 def getSingleLine(df, line):
     indexes = df.index
@@ -42,6 +43,9 @@ def getMinute(time):
     hour = np.floor(time)
     minute = (time-hour)*60
     return minute
+
+def roundToHour(time):
+    return time.replace(microsecond=0, second=0, minute=0)
 
 def getLeaveStopTime(times):
     leaveTimeList = []

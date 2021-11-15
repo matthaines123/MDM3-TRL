@@ -34,6 +34,23 @@ def LoadAllLocationData(filenames):
 
     return df
 
+def getBusLocations(filenames):
+    busLocations = {}
+    for dataFile in filenames:
+        df = LoadLocationData(dataFile)
+        busDict = df.to_dict()
+        for time, bus in busDict.items():
+            for busID, location in bus.items():
+                if type(location) == list:
+                    if time in busLocations.keys():
+                        locationsList = busLocations[time]
+                        busLocations[time].append([busID, location])
+                    else:
+                        busLocations[time] = [[busID, location]]
+    return busLocations
+
+
+
 """
 def merge_JsonFiles(filename, outputFilename):
     result = list()
