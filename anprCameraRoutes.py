@@ -12,6 +12,7 @@ import xmltodict
 from IPython.display import display
 #from plotStopTimes import getDecimalTime, getMinute
 from findLeaveTimes import leaveTimes
+from statistics import mean
 
 warnings.filterwarnings("ignore", category=UserWarning) 
 
@@ -236,33 +237,77 @@ def getDistanceBetweenStops(stop1, stop2, lines, ids):
                 for sectionList in routeSection['RouteLink']:
                     if sectionList['From']['StopPointRef'] == ids[0]:
                         lineDistances[line] = sectionList['Distance']
-    return lineDistances
+    #print(lineDistances[line[0]])
+    return lineDistances[line[0]]
 
-        
+def getTimesBetweenStops(stop1, stop2, lines, ids, filenames, stopLocation, direction, timeRange):
+    timediffs = {}
+
+
+    times1 = leaveTimes(filenames, stop1, lines, direction, stopLocation[0])
+    times2 = leaveTimes(filenames, stop2, lines, direction, stopLocation[1])
+    for line, times in times1.items():
+        i1, i2 = 0, 0
+        if len(times1[line]) > len(times2[line]):
+            time1Bigger = True
+        else:
+            time1Bigger = False
+        while i1 < len(times1[line]) and i2 < len(times2[line]):
+            timeDiff = abs(times1[line][i1] - times2[line][i2])
+            if timeDiff > 0.5:
+                oldTimeDiff = timeDiff
+                if time1Bigger:
+                    if (i1 + 1) < len(times1[line]):
+                        newTimeDiff = abs(times1[line][i1+1] - times2[line][i2])
+                else:
+                    if (i2 + 1) < len(times2[line]):
+                        newTimeDiff = abs(times1[line][i1] - times2[line][i2+1])
+                if newTimeDiff > oldTimeDiff:
+                    timeDiff = oldTimeDiff
+                else:
+                    timeDiff = newTimeDiff
+                    if time1Bigger:
+                        i1 += 1
+                    else:
+                        i2 += 1
+            hour = int(times1[line][i1] // 1)
+            if hour in timediffs.keys():
+                timediffs[hour].append(timeDiff)
+            else:
+                timediffs[hour] = [timeDiff]
+            i1 += 1
+            i2 += 1
+    meanDiffs = {}
+    for i in range(timeRange[0], timeRange[1]):
+        meanDiffs[i] = -1
+
+    for time, diffs in timediffs.items():
+        meanDiffs[time] = mean(diffs)
+    #print(meanDiffs)
+    #print(times2)
+    return meanDiffs.values()
+
+
 if __name__ == '__main__':
 
     #getTimeInGate('2021-10-20T19:57:27.342845+00:00', '2021-10-20T20:58:56.342845+00:00')
-    filenames = ['LocationDataLog19-10-2021,18;16;05RunTime28800.json']
+    filenames = ['LocationDataLog27-10-2021,19;26;47RunTime32400.json','LocationDataLog19-10-2021,18;16;05RunTime28800.json','LocationDataLog26-10-2021,12;20;15RunTime14400.json','LocationDataLog26-10-2021,19;38;25RunTime25200.json']
+    #filenames = ['LocationDataLog27-10-2021,19;26;47RunTime32400.json','LocationDataLog19-10-2021,18;16;05RunTime28800.json','LocationDataLog26-10-2021,12;20;15RunTime14400.json','LocationDataLog26-10-2021,19;38;25RunTime25200.json']
+    #filenames = listdir('Location_Data_files')
 
     ANPRFILE = 'dim-journey-links.json'
-    road = 'Anchor'
-    stop1 = 'The Centre'
-    stop2 = 'College Green'
+    road = 'Queen'
+    stop1 = 'College Green'
+    stop2 = 'The Centre'
     lines = ['4', '3']
     direction = 'outbound'
     ids = ['0100BRP90326', '0100BRP90337']
-    distances = getDistanceBetweenStops(stop1, stop2, lines, ids)
-    #print(distances)
-    #anprCoords, lengths = getANPRCoords(ANPRFILE, road)
+    timeRange = [8, 20]
+    stopLocation = [['51.453420', '-2.601350'],['51.454920', '-2.596850']]
 
-    #routes = plotRoutes(anprCoords)
+    times = getTimesBetweenStops(stop1, stop2, lines, ids, filenames, stopLocation, timeRange)
+    distance = getDistanceBetweenStops(stop1, stop2, lines, ids)
 
-    times1 = leaveTimes(filenames, stop1, lines, direction, 'find')
-    times2 = leaveTimes(filenames, stop2, lines, direction, 'find')
-    print(times1[lines[1]])
-    print(times2[lines[1]])
-    #for i in range(0, 23):
-
-    for roadName, coords in routes.items():
-        points = anprCoords[roadName]
-
+    
+    busSpeeds = [float(distance)/(time*1609) for time in times]
+    print(busSpeeds)
