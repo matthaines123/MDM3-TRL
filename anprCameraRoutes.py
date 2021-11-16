@@ -243,41 +243,51 @@ def getDistanceBetweenStops(stop1, stop2, lines, ids):
 def getTimesBetweenStops(stop1, stop2, lines, ids, filenames, stopLocation, direction, timeRange):
     timediffs = {}
 
+    tol = 0.15
 
-    times1 = leaveTimes(filenames, stop1, lines, direction, stopLocation[0])
-    times2 = leaveTimes(filenames, stop2, lines, direction, stopLocation[1])
-    for line, times in times1.items():
+    atimes1,ltimes1 = leaveTimes(filenames, stop1, lines, direction, stopLocation[0])
+    atimes2, ltimes2 = leaveTimes(filenames, stop2, lines, direction, stopLocation[1])
+    
+    
+    for line, times in ltimes1.items():
         i1, i2 = 0, 0
-        if len(times1[line]) > len(times2[line]):
+        if len(ltimes1[line]) > len(atimes2[line]):
             time1Bigger = True
         else:
             time1Bigger = False
-        while i1 < len(times1[line]) and i2 < len(times2[line]):
-            timeDiff = abs(times1[line][i1] - times2[line][i2])
-            if timeDiff > 0.5:
-                oldTimeDiff = timeDiff
+        while i1 < len(ltimes1[line]) and i2 < len(atimes2[line]):
+            #Insert for loop here
+            for j in range(0, 4):
+                newTimeDiff = 0
                 if time1Bigger:
-                    if (i1 + 1) < len(times1[line]):
-                        newTimeDiff = abs(times1[line][i1+1] - times2[line][i2])
+                    try:
+                        timeDiff = abs(ltimes1[line][i1+j] - atimes2[line][i2])
+                        if timeDiff < tol and timeDiff > 0:
+                            i1 += j
+                            newTimeDiff = timeDiff
+                            break
+                    except IndexError:
+                        break
+
                 else:
-                    if (i2 + 1) < len(times2[line]):
-                        newTimeDiff = abs(times1[line][i1] - times2[line][i2+1])
-                if newTimeDiff > oldTimeDiff:
-                    timeDiff = oldTimeDiff
+                    try:
+                        timeDiff = abs(ltimes1[line][i1] - atimes2[line][i2+j])
+                        if timeDiff < tol and timeDiff > 0:
+                            i2 += j
+                            newTimeDiff = timeDiff
+                            break
+                    except IndexError:
+                        break
+            hour = int(ltimes1[line][i1] // 1)
+            if newTimeDiff != 0:
+                if hour in timediffs.keys():
+                    timediffs[hour].append(newTimeDiff)
                 else:
-                    timeDiff = newTimeDiff
-                    if time1Bigger:
-                        i1 += 1
-                    else:
-                        i2 += 1
-            hour = int(times1[line][i1] // 1)
-            if hour in timediffs.keys():
-                timediffs[hour].append(timeDiff)
-            else:
-                timediffs[hour] = [timeDiff]
+                    timediffs[hour] = [timeDiff]
             i1 += 1
             i2 += 1
     meanDiffs = {}
+    
     for i in range(timeRange[0], timeRange[1]):
         meanDiffs[i] = -1
 
