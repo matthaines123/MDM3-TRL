@@ -33,9 +33,13 @@ def findMeanPunct(timetable, times, lines):
     for key,value in zip(exactHours,lateness):
         latenessDict[key].append(value)
     means = []
+    medians = []
+    vars = []
     for key,value in latenessDict.items():
-        means.append(sum(value)/len(value))
-    return eachHour, means
+        means.append(np.mean(value))
+        medians.append(np.median(value))
+        vars.append(np.var(value))
+    return eachHour, means, medians, vars
 
 def getMoreBars(timetable, times, lines):
     lateness = []
@@ -52,6 +56,8 @@ def getMoreBars(timetable, times, lines):
     for key,value in zip(exactHours,lateness):
         latenessDict[key].append(value)
     means = []
+    medians = []
     for key,value in latenessDict.items():
-        means.append(sum(value)/len(value))
-    return eachHour, means
+        means.append(np.mean(value))
+        medians.append(np.median(value))
+    return eachHour, means, medians

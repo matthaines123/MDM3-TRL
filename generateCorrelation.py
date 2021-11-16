@@ -2,13 +2,13 @@ import pandas as pd
 
 import LoadLocationData
 import matplotlib.pyplot as plt
-from calcPunctuality import findLateness, findMeanPunct, getMoreBars
+from calcPunctuality import findMeanPunct
 from findLeaveTimes import leaveTimes
 from importTimetable import onlyNeededTimetable
 from datetime import datetime
 from getTrafficData import getTrafficForRange
+from LoadLocationData import listFilenames
 from anprCameraRoutes import getTimesBetweenStops, getDistanceBetweenStops
-
 from scipy.stats import pearsonr
 import matplotlib.pyplot as plt
 
@@ -30,7 +30,7 @@ def getBusSpeeds(ANPRFILE, filenames,  roadName, stops, lines, direction, ids, t
 
 #Defining Constants
 
-FILENAMES = ['LocationDataLog27-10-2021,19;26;47RunTime32400.json','LocationDataLog19-10-2021,18;16;05RunTime28800.json','LocationDataLog26-10-2021,12;20;15RunTime14400.json','LocationDataLog26-10-2021,19;38;25RunTime25200.json']
+FILENAMES = listFilenames()
 ANPRFILENAME = 'dim-journey-links.json'
 
 #Defining variables

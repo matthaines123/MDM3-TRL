@@ -1,5 +1,7 @@
 import json
 import pandas as pd
+from os import listdir
+from os.path import isfile, join
 
 def LoadLocationData(filename):
 
@@ -49,18 +51,7 @@ def getBusLocations(filenames):
                         busLocations[time] = [[busID, location]]
     return busLocations
 
-
-
-"""
-def merge_JsonFiles(filename, outputFilename):
-    result = list()
-    for f1 in filename:
-        with open('Location_Data_files/'+f1, 'r') as infile:
-            result.extend(json.load(infile))
-
-    with open('Location_Data_files/'+outputFilename, 'w') as output_file:
-        json.dump(result, output_file)
-
-merge_JsonFiles(['LocationDataLog26-10-2021,12;20;15RunTime14400.json','LocationDataLog26-10-2021,19;38;25RunTime25200.json'],'LocationDataLog26-10-2021,19;38;25RunTime39600.json')
-merge_JsonFiles(['LineReferences26-10-2021,12;20;47RunTime14400.json','LineReferences26-10-2021,19;40;41RunTime25200.json'],'LineReferences26-10-2021,19;38;25RunTime39600.json')
-"""
+def listFilenames():
+    filenames = [f for f in listdir('Location_Data_files/') if isfile(join('Location_Data_files/', f))]
+    filenames.pop(0)
+    return filenames
