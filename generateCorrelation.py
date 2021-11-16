@@ -28,9 +28,17 @@ def getBusSpeeds(ANPRFILE, filenames,  roadName, stops, lines, direction, ids, t
     return busSpeeds
 
 
+def createCorrelation(list1, list2):
+    rCoeff, pval = pearsonr(list1, list2)
+    print(rCoeff, pval)
+    plt.scatter(list1, list2)
+    plt.show()
+
 #Defining Constants
 
-FILENAMES = listFilenames()
+#FILENAMES = listFilenames()
+FILENAMES = ['LocationDataLog27-10-2021,19;26;47RunTime32400.json','LocationDataLog19-10-2021,18;16;05RunTime28800.json','LocationDataLog26-10-2021,12;20;15RunTime14400.json','LocationDataLog26-10-2021,19;38;25RunTime25200.json']
+
 ANPRFILENAME = 'dim-journey-links.json'
 
 #Defining variables
@@ -44,18 +52,18 @@ ids = ['0100BRP90326', '0100BRP90337']
 timeRange = [8, 20]
 date = datetime(2021, 10, 19, timeRange[0])
 
-busSpeed = getBusSpeeds(ANPRFILENAME, FILENAMES, roadName, busStopName, lines, direction, ids, timeRange, stopLocation)
-trafficSpeed = getTrafficSpeeds(timeRange, roadName, date)
-punctuality = getBusLateness(FILENAMES, busStopName[0], lines, direction, stopLocation[0])
-
+busSpeed = getBusSpeeds(ANPRFILENAME, FILENAMES, roadName, busStopNames, lines, direction, ids, timeRange, stopLocation)
 print(busSpeed)
+
+trafficSpeed = getTrafficSpeeds(timeRange, roadName, date)
 print(trafficSpeed)
+
+punctuality = getBusLateness(FILENAMES, stopNameFromFile, lines, direction, stopLocation[0])
 print(punctuality)
 
+createCorrelation(busSpeed, trafficSpeed)
 
 
-rCoeff = pearsonr(speeds, means)
 
-plt.scatter(speeds, means)
-plt.show()
+
 
