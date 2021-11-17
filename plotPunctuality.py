@@ -47,7 +47,7 @@ if __name__ == '__main__':
     # Can either find this or put in the lat/longs
     stopLocation = ['51.453000', '-2.600830']
     ''' Code to call - Choose plots wanted '''
-    times = leaveTimes(filenames, busStopName, lines, direction, stopLocation)
+    arrivaltimes, times = leaveTimes(filenames, busStopName, lines, direction, stopLocation)
     timetable = onlyNeededTimetable(direction, lines, busStopName)
     #plotLatenessHist(timetable, times)
     plotMeanLateness(timetable, times, lines, busStopName, direction)

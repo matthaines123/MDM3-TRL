@@ -16,7 +16,7 @@ def LoadLocationData(filename):
     else:
         filename = filename + '.json'
 
-    with open('/Users/ryu/Documents/Location_Data_files/' + filename, 'r') as fp:
+    with open('Location_Data_files/' + filename, 'r') as fp:
         dataAtTimes = json.load(fp)
         df = pd.DataFrame(data=dataAtTimes)
         return df
@@ -111,6 +111,8 @@ locB = [51.464151, -2.609396]
 locC = [51.45317080184595, -2.5896996088096125]
 # Victoria Street
 locD = [51.4508604965169, -2.586308048500305]
+
+locationFiles = ['LocationDataLog27-10-2021,19;26;47RunTime32400.json','LocationDataLog19-10-2021,18;16;05RunTime28800.json','LocationDataLog26-10-2021,12;20;15RunTime14400.json','LocationDataLog26-10-2021,19;38;25RunTime25200.json']
 
 
 getTimeFromLocation('LocationDataLog27-10-2021,19;26;47RunTime32400', locA, '37613')
