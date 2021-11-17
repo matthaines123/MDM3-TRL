@@ -63,12 +63,10 @@ def findLeaveTimes(filename, stopLocations, stopName, line, direction):
 
 def iterateThroughFiles(filenames, stopLocations, stopName, line, direction):
     times = []
-    timeZoneCounter = 0
     for file in filenames:
         leaveTimes = findLeaveTimes(file, stopLocations, stopName, line, direction)
-        if timeZoneCounter < 4:
+        if '-10-' in file :
             leaveTimes  = [x+1 for x in leaveTimes]
-            timeZoneCounter += 1
         times.append(leaveTimes)
     times = [item for sublist in times for item in sublist]
     return times

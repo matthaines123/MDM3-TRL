@@ -13,25 +13,25 @@ def plotLatenessHist(timetable, hours):
     plt.ylabel('Time behind schedule')
     plt.show()
 
-def plotMeanLateness(timetable, hours, line, stop):
-    times, means, medians, vars = findMeanPunct(timetable, hours, line)
+def plotMeanLateness(timetable, hours, line, stop, direction):
+    times, means, medians, sd = findMeanPunct(timetable, hours, line)
     plt.bar(times, means, width=1.0, align='edge')
-    plt.scatter(times, medians, c='b')
-    #plt.scatter(times+0.5, var)
+    plt.scatter(times+0.5, medians, c='k')
+    plt.scatter(times+0.5, sd, c='g')
     plt.axhline(y=0, color='r', linestyle='-')
-    plt.legend(['On time', 'A median', 'Punctuality'])
-    plt.title('Histogram for the mean minutes all buses leave ' + stop + ' behind schedule for the the hours in the day')
+    plt.legend(['On time', 'Median', 'Standard deviation', 'Punctuality'])
+    plt.title('Histogram for the mean minutes all ' + direction + ' buses leave ' + stop + ' behind schedule for the the hours in the day')
     plt.xlabel('Time of the day')
     plt.ylabel('Time behind schedule/minutes')
     plt.show()
 
-def plotMoreMeanBars(timetable, hours, line, stop):
+def plotMoreMeanBars(timetable, hours, line, stop, direction):
     times, means, medians, vars = getMoreBars(timetable, hours, line)
     times = [x/4 for x in times]
     plt.bar(times, means, width=0.25, align='edge')
     plt.axhline(y=0, color='r', linestyle='-')
     plt.legend(['On time','Punctuality'])
-    plt.title('Histogram for the mean minutes all buses leave ' + stop + ' behind schedule for the the hours in the day')
+    plt.title('Histogram for the mean minutes all ' + direction + ' buses leave ' + stop + ' behind schedule for the the hours in the day')
     plt.xlabel('Time of the day')
     plt.ylabel('Time behind schedule/minutes')
     plt.show()
@@ -50,5 +50,5 @@ if __name__ == '__main__':
     times = leaveTimes(filenames, busStopName, lines, direction, stopLocation)
     timetable = onlyNeededTimetable(direction, lines, busStopName)
     #plotLatenessHist(timetable, times)
-    plotMeanLateness(timetable, times, lines, busStopName)
+    plotMeanLateness(timetable, times, lines, busStopName, direction)
     #plotMoreMeanBars(timetable, times, lines, busStopName)
