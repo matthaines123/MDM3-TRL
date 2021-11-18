@@ -33,8 +33,8 @@ def createCorrelation(list1, list2):
 
 #Defining Constants
 
-FILENAMES = listFilenames()
-#FILENAMES = ['LocationDataLog27-10-2021,19;26;47RunTime32400.json','LocationDataLog19-10-2021,18;16;05RunTime28800.json','LocationDataLog26-10-2021,12;20;15RunTime14400.json','LocationDataLog26-10-2021,19;38;25RunTime25200.json']
+#FILENAMES = listFilenames()
+FILENAMES = ['LocationDataLog27-10-2021,19;26;47RunTime32400.json','LocationDataLog19-10-2021,18;16;05RunTime28800.json','LocationDataLog26-10-2021,12;20;15RunTime14400.json','LocationDataLog26-10-2021,19;38;25RunTime25200.json']
 
 ANPRFILENAME = 'dim-journey-links.json'
 
