@@ -61,7 +61,7 @@ Faresaver = 685
 
 if __name__ == '__main__':
     #Get the bus data from the open bus data API
-    timestamp, data = getBusData(datafeedID)
+    timestamp, data = getBusData(datafeedID, )
     busDict = getBusLocationsDict(data)
     df = getBusLocationsDF(busDict)
     #Convert bus GPS coords to lists of latitudes and longitudes

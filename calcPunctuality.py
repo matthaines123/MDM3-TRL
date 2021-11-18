@@ -9,8 +9,15 @@ def getMinute(time):
 def findLateness(timetable, times):
     lateness = []
     for time in times:
+        """ FOR ONLY LATE
+        latenessForTime = [time - x for x in timetable]
+        minVal = min([x for x in latenessForTime if x > 0])
+        minute = getMinute(minVal)
+        lateness.append(minute)
+        """
         latenessForTime = [x - time for x in timetable]
         minVal = min([abs(x - time) for x in timetable])
+        
         minute = getMinute(minVal)
         if minVal in latenessForTime:
             lateness.append(minute)
@@ -34,12 +41,12 @@ def findMeanPunct(timetable, times, lines):
         latenessDict[key].append(value)
     means = []
     medians = []
-    vars = []
+    sd = []
     for key,value in latenessDict.items():
         means.append(np.mean(value))
         medians.append(np.median(value))
-        vars.append(np.var(value))
-    return eachHour, means, medians, vars
+        sd.append(np.std(value))
+    return eachHour, means, medians, sd
 
 def getMoreBars(timetable, times, lines):
     lateness = []
@@ -60,4 +67,7 @@ def getMoreBars(timetable, times, lines):
     for key,value in latenessDict.items():
         means.append(np.mean(value))
         medians.append(np.median(value))
+    eachHour.pop[-1]
+    means.pop(-1)
+    medians.pop(-1)
     return eachHour, means, medians

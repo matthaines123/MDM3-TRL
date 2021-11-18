@@ -44,8 +44,12 @@ def getLeaveStopTime(times, popTime):
     for i in range(2,len(decTimeList)-1):
         if abs(decTimeList[i] - decTimeList[i+1]) > 0.02 and abs(decTimeList[i-2] - decTimeList[i]) < 0.04:
             leaveTimes.append(decTimeList[i])
+<<<<<<< HEAD
     if leaveTimes != [] and popTime == True:
         leaveTimes.pop(0)
+=======
+    #leaveTimes.pop(0) # Does this need to be done?
+>>>>>>> a99f400369c34bea12bd6c284601fdbdc12ca1d9
     return leaveTimes
 
 def getArriveStopTime(times):
@@ -83,13 +87,16 @@ def findLeaveTimes(filename, stopLocations, stopName, line, direction, popTime):
 def iterateThroughFiles(filenames, stopLocations, stopName, line, direction, popTime):
     ltimes = []
     atimes = []
-    timeZoneCounter = 0
     for file in filenames:
+<<<<<<< HEAD
         arriveTimes, leaveTimes = findLeaveTimes(file, stopLocations, stopName, line, direction, popTime)
         if timeZoneCounter < 4:
+=======
+        arriveTimes, leaveTimes = findLeaveTimes(file, stopLocations, stopName, line, direction)
+        if '-10-' in file :
+>>>>>>> a99f400369c34bea12bd6c284601fdbdc12ca1d9
             arriveTimes = [x+1 for x in arriveTimes]
             leaveTimes  = [x+1 for x in leaveTimes]
-            timeZoneCounter += 1
         ltimes.append(leaveTimes)
         atimes.append(arriveTimes)
     ltimes = [item for sublist in ltimes for item in sublist]
