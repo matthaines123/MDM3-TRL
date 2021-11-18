@@ -6,6 +6,7 @@ from LoadLocationData import LoadLocationData
 #from cartopy.io.img_tiles import OSM
 import pandas as pd
 import numpy as np
+from statistics import mean
 from datetime import datetime, timedelta
 
 def getTrafficGates():
@@ -33,17 +34,42 @@ def roundToHour(time):
     time = time[0].replace('T',  ' ')
     return str(datetime.fromisoformat(time).replace(microsecond=0, second=0, minute=0))
 
-def getTrafficForRange(timeRange, road, date):
-    i = timeRange[0]
-    speeds = []
-    while i != timeRange[1]:
-        delta = i-timeRange[0]
+def getTrafficForRange(timeRange, road, duration):
+    date = datetime(2021, 10, 19, timeRange[0])
+    endDate = date + timedelta(days=duration)
+    newDate = date
+    speedsDict = {}
+    while newDate != endDate:
 
-        newDate = date + timedelta(hours=delta)
-        match = CheckMatches(str(newDate).replace(' ', 'T'), road)
-        speed = match[1]
-        i += 1
-        speeds.append(speed)
+        day = newDate.isoweekday()
+        if day not in [6,7]:
+
+
+            i = timeRange[0]
+            
+            while i != timeRange[1]:
+                delta = i-timeRange[0]
+
+                newHourDate = newDate + timedelta(hours=delta)
+                match = CheckMatches(str(newHourDate).replace(' ', 'T'), road)
+                try:
+                    speed = match[1]
+                    if i in speedsDict.keys():
+                        speedsDict[i].append(speed)
+                    else:
+                        speedsDict[i] = [speed]
+                    i += 1
+                except IndexError:
+                    i += 1
+        
+        newDate = newDate + timedelta(days = 1)
+    
+    speeds = []
+    hours = []
+    for key, item in speedsDict.items():
+        hours.append(key)
+        speeds.append(mean(item))
+
     return speeds
 
 
