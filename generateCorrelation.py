@@ -25,10 +25,13 @@ def getBusSpeeds(ANPRFILE, filenames,  roadName, stops, lines, direction, ids, t
     return busSpeeds
 
 
-def createCorrelation(list1, list2):
+def createCorrelation(list1, list2, measureOne, measureTwo, stop):
     rCoeff, pval = pearsonr(list1, list2)
     print(rCoeff, pval)
     plt.scatter(list1, list2)
+    plt.title('Scatter plot to show the correlation between ' + measureOne + ' and ' + measureTwo + ' at ' + stop)
+    plt.xlabel(measureOne)
+    plt.xlabel(measureTwo)
     plt.show()
 
 #Defining Constants
@@ -58,7 +61,9 @@ print(trafficSpeed)
 punctuality = getBusLateness(FILENAMES, stopNameFromFile, lines, direction, stopLocation[0], False)
 print(punctuality)
 
-createCorrelation(busSpeed, trafficSpeed)
+createCorrelation(busSpeed, trafficSpeed, 'bus speed', 'traffic speed', stopNameFromFile)
+createCorrelation(busSpeed, punctuality, 'bus speed', 'punctuality', stopNameFromFile)
+createCorrelation(trafficSpeed, punctuality, 'traffic speed', 'punctuality', stopNameFromFile)
 
 
 
