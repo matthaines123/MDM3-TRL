@@ -66,13 +66,14 @@ stopNameFromFile = 'Bristol College Green (P1)'
 stopLocation = [['51.453420', '-2.601350'],['51.454920', '-2.596850']]
 # Found in the key list.txt
 ids = ['0100BRP90326', '0100BRP90337']
-timeRange = [8, 19]
-date = datetime(2021, 10, 19, timeRange[0])
+timeRange = [8, 20]
+duration = 30
 
-busSpeed = getBusSpeeds(ANPRFILENAME, FILENAMES, roadName, busStopNames, lines, direction, ids, timeRange, stopLocation, True)
-print(busSpeed)
 
-trafficSpeed = getTrafficSpeeds(timeRange, roadName, date)
+#busSpeed = getBusSpeeds(ANPRFILENAME, FILENAMES, roadName, busStopNames, lines, direction, ids, timeRange, stopLocation, True)
+#print(busSpeed)
+
+trafficSpeed = getTrafficSpeeds(timeRange, roadName, duration)
 print(trafficSpeed)
 
 punctuality, hours = getBusLateness(FILENAMES, stopNameFromFile, lines, direction, stopLocation[0], False)
