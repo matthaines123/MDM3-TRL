@@ -70,8 +70,8 @@ timeRange = [8, 20]
 duration = 30
 
 
-#busSpeed = getBusSpeeds(ANPRFILENAME, FILENAMES, roadName, busStopNames, lines, direction, ids, timeRange, stopLocation, True)
-#print(busSpeed)
+busSpeed = getBusSpeeds(ANPRFILENAME, FILENAMES, roadName, busStopNames, lines, direction, ids, timeRange, stopLocation, True)
+print(busSpeed)
 
 trafficSpeed = getTrafficSpeeds(timeRange, roadName, duration)
 print(trafficSpeed)
