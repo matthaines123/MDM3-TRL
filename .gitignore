@@ -1,5 +1,7 @@
-__pychache__
+__pychache__/
 .vscode
 .idea
 cache
 Location_Data_files
+launch.json
+
