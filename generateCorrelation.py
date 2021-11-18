@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 from calcPunctuality import findMeanPunct
-from plotPunctuality import plotPunct
 from findLeaveTimes import leaveTimes
 from importTimetable import onlyNeededTimetable
 from datetime import datetime
