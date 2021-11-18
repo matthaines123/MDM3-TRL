@@ -67,4 +67,7 @@ def getMoreBars(timetable, times, lines):
     for key,value in latenessDict.items():
         means.append(np.mean(value))
         medians.append(np.median(value))
+    eachHour.pop[-1]
+    means.pop(-1)
+    medians.pop(-1)
     return eachHour, means, medians
