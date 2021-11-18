@@ -25,13 +25,13 @@ def getBusSpeeds(ANPRFILE, filenames,  roadName, stops, lines, direction, ids, t
     return busSpeeds
 
 
-def createCorrelation(list1, list2, measureOne, measureTwo, stop):
+def createCorrelation(list1, list2, measureOne, measureTwo, xlabel, ylabel, stop):
     rCoeff, pval = pearsonr(list1, list2)
     print(rCoeff, pval)
     plt.scatter(list1, list2)
     plt.title('Scatter plot to show the correlation between ' + measureOne + ' and ' + measureTwo + ' at ' + stop)
-    plt.xlabel(measureOne)
-    plt.xlabel(measureTwo)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
     plt.show()
 
 def plotPunct(times, means, direction, stop):
@@ -53,19 +53,19 @@ FILENAMES = listFilenames()
 ANPRFILENAME = 'dim-journey-links.json'
 
 #Defining variables
-roadName = 'Anchor'
+roadName = 'Bond St'
 # Only put the lines in that we have files for in the RawTimetableData folder!!!
-lines = ['4','3']
+lines = ['72a']
 # inbound/southbound or outbound/northbound
-direction = 'outbound'
+direction = 'inbound'
 # first stop followed by the second the bus goes though - see overleaf
-busStopNames = ['College Green', 'The Centre']
-stopNameFromFile = 'Bristol College Green (P1)'
+busStopNames = ['Bristol Royal Infirmary', 'Stokes Croft']
+stopNameFromFile = 'Bristol Royal Infirmary (H2)'
 # Take the longs/lats from key list.txt
-stopLocation = [['51.453420', '-2.601350'],['51.454920', '-2.596850']]
+stopLocation = [['51.45866049866497', '-2.5960978573500415'],['51.45990783545194', '-2.5917372150215985']]
 # Found in the key list.txt
-ids = ['0100BRP90326', '0100BRP90337']
-timeRange = [8, 20]
+ids = ['0100BRP90273', '0100BRP90366']
+timeRange = [8, 19]
 duration = 30
 
 
@@ -78,12 +78,7 @@ print(trafficSpeed)
 punctuality, hours = getBusLateness(FILENAMES, stopNameFromFile, lines, direction, stopLocation[0], False)
 print(punctuality)
 
-createCorrelation(busSpeed, trafficSpeed, 'bus speed', 'traffic speed', stopNameFromFile)
-createCorrelation(busSpeed, punctuality, 'bus speed', 'punctuality', stopNameFromFile)
-createCorrelation(trafficSpeed, punctuality, 'traffic speed', 'punctuality', stopNameFromFile)
+createCorrelation(busSpeed, trafficSpeed, 'bus speed', 'traffic speed', 'Bus Speed/mph', 'Traffic Speed/mph', stopNameFromFile)
+createCorrelation(busSpeed, punctuality, 'bus speed', 'punctuality', 'Bus Speed/mph', 'Minutes late', stopNameFromFile)
+createCorrelation(trafficSpeed, punctuality, 'traffic speed', 'punctuality', 'Traffic Speed/mph', 'Minutes Late', stopNameFromFile)
 plotPunct(hours, punctuality, direction, stopLocation[0])
-
-
-
-
-

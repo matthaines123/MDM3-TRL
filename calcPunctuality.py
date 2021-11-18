@@ -46,6 +46,9 @@ def findMeanPunct(timetable, times, lines):
         means.append(np.mean(value))
         medians.append(np.median(value))
         sd.append(np.std(value))
+    eachHour.pop[-1]
+    means.pop(-1)
+    medians.pop(-1)
     return eachHour, means, medians, sd
 
 def getMoreBars(timetable, times, lines):

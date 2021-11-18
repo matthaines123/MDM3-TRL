@@ -1,6 +1,6 @@
-import folium
-import osmnx as ox
-import networkx as nx
+#import folium
+#import osmnx as ox
+#import networkx as nx
 import json
 import itertools
 import warnings
@@ -9,7 +9,7 @@ import numpy as np
 from os import listdir
 from os.path import isfile, join
 import xmltodict
-from IPython.display import display
+#from IPython.display import display
 #from plotStopTimes import getDecimalTime, getMinute
 from findLeaveTimes import leaveTimes
 from statistics import mean
@@ -236,9 +236,10 @@ def getDistanceBetweenStops(stop1, stop2, lines, ids):
                 routeSection = dict_data['RouteSections']['RouteSection'][0]
                 for sectionList in routeSection['RouteLink']:
                     if sectionList['From']['StopPointRef'] == ids[0]:
+                        print('test')
                         lineDistances[line] = sectionList['Distance']
-    #print(lineDistances[line[0]])
-    return lineDistances[line[0]]
+    print(lineDistances)
+    return lineDistances[lines[0]]
 
 def getTimesBetweenStops(stop1, stop2, lines, ids, filenames, stopLocation, direction, timeRange, popTime):
     timediffs = {}
@@ -307,18 +308,24 @@ if __name__ == '__main__':
     #filenames = listdir('Location_Data_files')
 
     ANPRFILE = 'dim-journey-links.json'
-    road = 'Queen'
-    stop1 = 'College Green'
-    stop2 = 'The Centre'
-    lines = ['4', '3']
-    direction = 'outbound'
-    ids = ['0100BRP90326', '0100BRP90337']
-    timeRange = [8, 20]
-    stopLocation = [['51.453420', '-2.601350'],['51.454920', '-2.596850']]
+    road = 'Bond St'
+    # Only put the lines in that we have files for in the RawTimetableData folder!!!
+    lines = ['72a']
+    # inbound/southbound or outbound/northbound
+    direction = 'inbound'
+    # first stop followed by the second the bus goes though - see overleaf
+    stop1 = 'Bristol Royal Infirmary'
+    stop2 = 'Stokes Croft'
+    # Take the longs/lats from key list.txt
+    stopLocation = [['51.45866049866497', '-2.5960978573500415'],['51.45990783545194', '-2.5917372150215985']]
+    # Found in the key list.txt
+    ids = ['0100BRP90273', '0100BRP90366']
+    timeRange = [8, 19]
+    duration = 30
 
-    times = getTimesBetweenStops(stop1, stop2, lines, ids, filenames, stopLocation, timeRange)
+    #times = getTimesBetweenStops(stop1, stop2, lines, ids, filenames, stopLocation, timeRange)
     distance = getDistanceBetweenStops(stop1, stop2, lines, ids)
-
+    print(distance)
     
     busSpeeds = [float(distance)/(time*1609) for time in times]
     print(busSpeeds)
