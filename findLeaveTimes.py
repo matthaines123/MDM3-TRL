@@ -44,48 +44,63 @@ def getLeaveStopTime(times):
     for i in range(2,len(decTimeList)-1):
         if abs(decTimeList[i] - decTimeList[i+1]) > 0.02 and abs(decTimeList[i-2] - decTimeList[i]) < 0.04:
             leaveTimes.append(decTimeList[i])
+    #leaveTimes.pop(0) # Does this need to be done?
     return leaveTimes
 
-def getStopLatLong(stopLocations, stopName, line, direction):
-    if direction == 'inbound' or direction == 'southbound' or direction == 'citybound':
-        dir = 1
-    else:
-        dir = 0
+def getArriveStopTime(times):
+    arriveTimes = []
+    decTimeList = []
+    for time in times:
+        hour = getDecimalTime(time)
+        decTimeList.append(hour)
+    
+    for i in range(1, len(decTimeList)):
+        if abs(decTimeList[i] - decTimeList[i-1] > 0.02): #Bracket wrong here
+            arriveTimes.append(decTimeList[i])
+    arriveTimes.pop(-1)
+    return arriveTimes    
+
+def getStopLatLong(stopLocations, stopName, line, dir):
     forDirection = stopLocations[line][dir]
     forStop = forDirection[forDirection['Name']==stopName]
     loc = [float(forStop['Lat'].to_list()[0]),float(forStop['Long'].to_list()[0])]
     return loc
 
 def findLeaveTimes(filename, stopLocations, stopName, line, direction):
-    location = getStopLatLong(stopLocations, stopName, line, direction)
+    if len(stopLocations) == 2:
+        location = [float(x) for x in stopLocations]
+    else:
+        location = getStopLatLong(stopLocations, stopName, line, direction)
     times = getTimeFromLocation(filename, location, line)
+    arriveTimes = getArriveStopTime(times)
     leaveTimes = getLeaveStopTime(times)
-    return leaveTimes
+    return arriveTimes, leaveTimes
 
 def iterateThroughFiles(filenames, stopLocations, stopName, line, direction):
-    times = []
-    timeZoneCounter = 0
+    ltimes = []
+    atimes = []
     for file in filenames:
-        leaveTimes = findLeaveTimes(file, stopLocations, stopName, line, direction)
-        if timeZoneCounter < 4:
+        arriveTimes, leaveTimes = findLeaveTimes(file, stopLocations, stopName, line, direction)
+        if '-10-' in file :
+            arriveTimes = [x+1 for x in arriveTimes]
             leaveTimes  = [x+1 for x in leaveTimes]
-            timeZoneCounter += 1
-        times.append(leaveTimes)
-    times = [item for sublist in times for item in sublist]
-    return times
+        ltimes.append(leaveTimes)
+        atimes.append(arriveTimes)
+    ltimes = [item for sublist in ltimes for item in sublist]
+    atimes = [item for sublist in atimes for item in sublist]
+    return atimes, ltimes
 
-def leaveTimes(filenames, stopName, line, direction):
-    stopLocations = getStopLocations()
-    if line == 'All' or line == 'all':
-        times = defaultdict(list)
-        linesAtStop = []
-        for item in stopLocations.keys():
-            if stopName in list(stopLocations[item][dir]['Name']):
-                forDirection = stopLocations[item][dir]
-                forStop = forDirection[forDirection['Name']==stopName]
-                linesAtStop.append(item)
-        for item in linesAtStop:
-            times[item] = iterateThroughFiles(filenames, stopLocations, stopName, item, direction)
+def leaveTimes(filenames, stopName, lines, direction, stopLocations):
+    if direction == 'inbound' or direction == 'southbound' or direction == 'citybound':
+        dir = 1
     else:
-        times = iterateThroughFiles(filenames, stopLocations, stopName, line, direction)
-    return times
+        dir = 0
+    if stopLocations == 'find' or stopLocations == 'Find':
+        stopLocations = getStopLocations()
+    ltimes = defaultdict(list)
+    atimes = defaultdict(list)
+    for item in lines:
+        arriveTimes, leaveTimes = iterateThroughFiles(filenames, stopLocations, stopName, item, dir)
+        ltimes[item] = leaveTimes
+        atimes[item] = arriveTimes
+    return atimes, ltimes

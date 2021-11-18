@@ -32,10 +32,14 @@ if __name__ == '__main__':
     ''' Parameters to change '''
     filenames = ['LocationDataLog27-10-2021,19;26;47RunTime32400.json','LocationDataLog19-10-2021,18;16;05RunTime28800.json','LocationDataLog26-10-2021,12;20;15RunTime14400.json','LocationDataLog26-10-2021,19;38;25RunTime25200.json']
     busStopName = 'Filton Avenue, Lockleaze Road'
+    # Single bus line or all
     line = '73'
+    # inbound/southbound or outbound/northbound
     direction = 'inbound'
+    # Can either find this or put in the lat/longs
+    stopLocations = 'find'
     ''' Code to call - Choose plots wanted '''
-    times = leaveTimes(filenames, busStopName, line, direction)
+    times = leaveTimes(filenames, busStopName, line, direction, stopLocations)
     plotStopTimes(times, busStopName, line, direction)
     plotTimetable(timetable)
     plt.grid()

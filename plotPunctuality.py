@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
-from calcPunctuality import findLateness, findMeanPunct
+from LoadLocationData import listFilenames
+from calcPunctuality import findLateness, findMeanPunct, getMoreBars
 from findLeaveTimes import leaveTimes
+from importTimetable import onlyNeededTimetable
 
 def plotLatenessHist(timetable, hours):
     lateness = findLateness(timetable, hours)
@@ -11,29 +13,42 @@ def plotLatenessHist(timetable, hours):
     plt.ylabel('Time behind schedule')
     plt.show()
 
-def plotMeanLateness(timetable, hours, line):
-    times, means = findMeanPunct(timetable, hours, line)
-    plt.bar(times+0.5, means, edgecolor='w')
+def plotMeanLateness(timetable, hours, line, stop, direction):
+    times, means, medians, sd = findMeanPunct(timetable, hours, line)
+    plt.bar(times, means, width=1.0, align='edge')
+    plt.scatter(times+0.5, medians, c='k')
+    plt.scatter(times+0.5, sd, c='g')
     plt.axhline(y=0, color='r', linestyle='-')
-    plt.legend(['On time','Punctuality'])
+    plt.legend(['On time', 'Median', 'Standard deviation', 'Punctuality'])
+    plt.title('Histogram for the mean minutes all ' + direction + ' buses leave ' + stop + ' behind schedule for the the hours in the day')
     plt.xlabel('Time of the day')
-    plt.ylabel('Time behind schedule')
+    plt.ylabel('Time behind schedule/minutes')
     plt.show()
 
-def produceTimetable():
-    timetable = []
-    for i in range(45):
-        timetable.append(7.96 + 0.25*i)
-    return timetable
+def plotMoreMeanBars(timetable, hours, line, stop, direction):
+    times, means, medians, vars = getMoreBars(timetable, hours, line)
+    times = [x/4 for x in times]
+    plt.bar(times, means, width=0.25, align='edge')
+    plt.axhline(y=0, color='r', linestyle='-')
+    plt.legend(['On time','Punctuality'])
+    plt.title('Histogram for the mean minutes all ' + direction + ' buses leave ' + stop + ' behind schedule for the the hours in the day')
+    plt.xlabel('Time of the day')
+    plt.ylabel('Time behind schedule/minutes')
+    plt.show()
 
 if __name__ == '__main__':
     ''' Parameters to change '''
-    filenames = ['LocationDataLog27-10-2021,19;26;47RunTime32400.json','LocationDataLog19-10-2021,18;16;05RunTime28800.json','LocationDataLog26-10-2021,12;20;15RunTime14400.json','LocationDataLog26-10-2021,19;38;25RunTime25200.json']
-    busStopName = 'Filton Avenue, Lockleaze Road'
-    line = '73'
-    direction = 'inbound'
+    filenames = listFilenames()
+    busStopName = 'Bristol College Green (P1)'
+    # list all the bus lines being considered
+    lines = ['4','3']
+    # inbound/southbound or outbound/northbound
+    direction = 'outbound'
+    # Can either find this or put in the lat/longs
+    stopLocation = ['51.453000', '-2.600830']
     ''' Code to call - Choose plots wanted '''
-    times = leaveTimes(filenames, busStopName, line, direction)
-    timetable = produceTimetable()
+    arrivaltimes, times = leaveTimes(filenames, busStopName, lines, direction, stopLocation)
+    timetable = onlyNeededTimetable(direction, lines, busStopName)
     #plotLatenessHist(timetable, times)
-    plotMeanLateness(timetable, times, line)
+    plotMeanLateness(timetable, times, lines, busStopName, direction)
+    #plotMoreMeanBars(timetable, times, lines, busStopName)

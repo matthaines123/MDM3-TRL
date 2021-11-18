@@ -46,12 +46,3 @@ def getStopLocations():
             operatorDict[busName] = routes
 
     return operatorDict
-
-
-
-
-            
-            
-
-
-    

@@ -9,8 +9,15 @@ def getMinute(time):
 def findLateness(timetable, times):
     lateness = []
     for time in times:
+        """ FOR ONLY LATE
+        latenessForTime = [time - x for x in timetable]
+        minVal = min([x for x in latenessForTime if x > 0])
+        minute = getMinute(minVal)
+        lateness.append(minute)
+        """
         latenessForTime = [x - time for x in timetable]
         minVal = min([abs(x - time) for x in timetable])
+        
         minute = getMinute(minVal)
         if minVal in latenessForTime:
             lateness.append(minute)
@@ -18,25 +25,46 @@ def findLateness(timetable, times):
             lateness.append(-minute)
     return lateness
 
-def findMeanPunct(timetable, times, line):
-    if line == 'all' or line == 'All':
-        lateness = []
-        exactHours = []
-        for item in list(times.keys()):
-            latenessSingle = findLateness(timetable, item)
-            exactHoursSingle = [np.floor(i) for i in item]
-            lateness.append(latenessSingle)
-            exactHours.append(exactHoursSingle)
-        lateness = [item for sublist in lateness for item in sublist]
-        exactHours = [item for sublist in exactHours for item in sublist]
-    else:
-        lateness = findLateness(timetable, times)
-        exactHours = [np.floor(item) for item in times]
+def findMeanPunct(timetable, times, lines):
+    lateness = []
+    exactHours = []
+    for item in lines:
+        latenessSingle = findLateness(timetable[item], times[item])
+        exactHoursSingle = [np.floor(i) for i in times[item]]
+        lateness.append(latenessSingle)
+        exactHours.append(exactHoursSingle)
+    lateness = [item for sublist in lateness for item in sublist]
+    exactHours = [item for sublist in exactHours for item in sublist]
     eachHour = np.unique(np.array(exactHours))
     latenessDict = defaultdict(list)
     for key,value in zip(exactHours,lateness):
         latenessDict[key].append(value)
     means = []
+    medians = []
+    sd = []
     for key,value in latenessDict.items():
-        means.append(sum(value)/len(value))
-    return eachHour, means
+        means.append(np.mean(value))
+        medians.append(np.median(value))
+        sd.append(np.std(value))
+    return eachHour, means, medians, sd
+
+def getMoreBars(timetable, times, lines):
+    lateness = []
+    exactHours = []
+    for item in lines:
+        latenessSingle = findLateness(timetable[item], times[item])
+        exactHoursSingle = [np.floor(i*4) for i in times[item]]
+        lateness.append(latenessSingle)
+        exactHours.append(exactHoursSingle)
+    lateness = [item for sublist in lateness for item in sublist]
+    exactHours = [item for sublist in exactHours for item in sublist]
+    eachHour = np.unique(np.array(exactHours))
+    latenessDict = defaultdict(list)
+    for key,value in zip(exactHours,lateness):
+        latenessDict[key].append(value)
+    means = []
+    medians = []
+    for key,value in latenessDict.items():
+        means.append(np.mean(value))
+        medians.append(np.median(value))
+    return eachHour, means, medians
