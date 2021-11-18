@@ -15,15 +15,14 @@ import matplotlib.pyplot as plt
 def getTrafficSpeeds(timeRange, roadName, date):
     return getTrafficForRange(timeRange, roadName, date)
 
-def getBusLateness(FILENAMES, stop, lines, direction, stopLocation):
-    atimes, ltimes = leaveTimes(FILENAMES, stop, lines, direction, stopLocation)
+def getBusLateness(FILENAMES, stop, lines, direction, stopLocation, popTime):
+    atimes, ltimes = leaveTimes(FILENAMES, stop, lines, direction, stopLocation, popTime)
     timetable = onlyNeededTimetable(direction, lines, stop)
     hours, means, medians, vars = findMeanPunct(timetable, ltimes, lines)
     return means
 
-def getBusSpeeds(ANPRFILE, filenames,  roadName, stops, lines, direction, ids, timeRange, stopLocation):
-    times = getTimesBetweenStops(stops[0], stops[1], lines, ids, filenames, stopLocation, direction, timeRange)
-    print(times)
+def getBusSpeeds(ANPRFILE, filenames,  roadName, stops, lines, direction, ids, timeRange, stopLocation, popTime):
+    times = getTimesBetweenStops(stops[0], stops[1], lines, ids, filenames, stopLocation, direction, timeRange, popTime)
     distance = getDistanceBetweenStops(stops[0], stops[1], lines, ids)
     busSpeeds = [float(distance)/(time*1609) for time in times]
     return busSpeeds
@@ -50,16 +49,16 @@ busStopNames = ['College Green', 'The Centre']
 stopNameFromFile = 'Bristol College Green (P1)'
 stopLocation = [['51.453420', '-2.601350'],['51.454920', '-2.596850']]
 ids = ['0100BRP90326', '0100BRP90337']
-timeRange = [8, 20]
+timeRange = [8, 19]
 date = datetime(2021, 10, 19, timeRange[0])
 
-busSpeed = getBusSpeeds(ANPRFILENAME, FILENAMES, roadName, busStopNames, lines, direction, ids, timeRange, stopLocation)
+busSpeed = getBusSpeeds(ANPRFILENAME, FILENAMES, roadName, busStopNames, lines, direction, ids, timeRange, stopLocation, True)
 print(busSpeed)
 
 trafficSpeed = getTrafficSpeeds(timeRange, roadName, date)
 print(trafficSpeed)
 
-punctuality = getBusLateness(FILENAMES, stopNameFromFile, lines, direction, stopLocation[0])
+punctuality = getBusLateness(FILENAMES, stopNameFromFile, lines, direction, stopLocation[0], False)
 print(punctuality)
 
 createCorrelation(busSpeed, trafficSpeed)

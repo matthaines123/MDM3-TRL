@@ -240,13 +240,13 @@ def getDistanceBetweenStops(stop1, stop2, lines, ids):
     #print(lineDistances[line[0]])
     return lineDistances[line[0]]
 
-def getTimesBetweenStops(stop1, stop2, lines, ids, filenames, stopLocation, direction, timeRange):
+def getTimesBetweenStops(stop1, stop2, lines, ids, filenames, stopLocation, direction, timeRange, popTime):
     timediffs = {}
 
     tol = 0.15
 
-    atimes1,ltimes1 = leaveTimes(filenames, stop1, lines, direction, stopLocation[0])
-    atimes2, ltimes2 = leaveTimes(filenames, stop2, lines, direction, stopLocation[1])
+    atimes1, ltimes1 = leaveTimes(filenames, stop1, lines, direction, stopLocation[0], popTime)
+    atimes2, ltimes2 = leaveTimes(filenames, stop2, lines, direction, stopLocation[1], popTime)
     
     
     for line, times in ltimes1.items():
@@ -292,7 +292,8 @@ def getTimesBetweenStops(stop1, stop2, lines, ids, filenames, stopLocation, dire
         meanDiffs[i] = -1
 
     for time, diffs in timediffs.items():
-        meanDiffs[time] = mean(diffs)
+        if time in meanDiffs.keys():
+            meanDiffs[time] = mean(diffs)
     #print(meanDiffs)
     #print(times2)
     return meanDiffs.values()
