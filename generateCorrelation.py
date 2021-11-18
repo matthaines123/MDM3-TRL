@@ -57,10 +57,14 @@ ANPRFILENAME = 'dim-journey-links.json'
 roadName = 'Anchor'
 # Only put the lines in that we have files for in the RawTimetableData folder!!!
 lines = ['4','3']
+# inbound/southbound or outbound/northbound
 direction = 'outbound'
+# first stop followed by the second the bus goes though - see overleaf
 busStopNames = ['College Green', 'The Centre']
 stopNameFromFile = 'Bristol College Green (P1)'
+# Take the longs/lats from key list.txt
 stopLocation = [['51.453420', '-2.601350'],['51.454920', '-2.596850']]
+# Found in the key list.txt
 ids = ['0100BRP90326', '0100BRP90337']
 timeRange = [8, 19]
 date = datetime(2021, 10, 19, timeRange[0])
