@@ -55,19 +55,19 @@ FILENAMES = listFilenames()
 ANPRFILENAME = 'dim-journey-links.json'
 
 #Defining variables
-roadName = 'Anchor Rd'
+roadName = 'Bond St'
 # Only put the lines in that we have files for in the RawTimetableData folder!!!
-lines = ['3, 4']
+lines = ['72a']
 # inbound/southbound or outbound/northbound
-direction = 'outbound'
+direction = 'inbound'
 # first stop followed by the second the bus goes though - see overleaf
-busStopNames = ['College Green', 'The Centre']
-stopNameFromFile = 'Bristol College Green (P2)'
+busStopNames = ['Bristol Royal Infirmary', 'Stokes Croft']
+stopNameFromFile = 'Kingsdown Bristol Royal Infirmary (H2)'
 # Take the longs/lats from key list.txt
-stopLocation = [['51.453420', '-2.601350'],['51.454920', '-2.596850']]
+stopLocation = [['51.45866049866497', '-2.5960978573500415'],['51.45990783545194', '-2.5917372150215985']]
 # Found in the key list.txt
-ids = ['0100BRP90326', '0100BRP90337']
-distance = 561
+ids = ['0100BRP90273', '0100BRP90366']
+distance = 508
 
 
 timeRange = [8, 19]
@@ -86,4 +86,4 @@ print(punctuality)
 createCorrelation(busSpeed, trafficSpeed, 'bus speed', 'traffic speed', 'Bus Speed/mph', 'Traffic Speed/mph', stopNameFromFile)
 createCorrelation(busSpeed, punctuality, 'bus speed', 'punctuality', 'Bus Speed/mph', 'Minutes late', stopNameFromFile)
 createCorrelation(trafficSpeed, punctuality, 'traffic speed', 'punctuality', 'Traffic Speed/mph', 'Minutes Late', stopNameFromFile)
-plotPunct(hours, punctuality, direction, stopLocation[0])
+plotPunct(hours, punctuality, direction, busStopNames[0])

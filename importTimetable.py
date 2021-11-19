@@ -262,11 +262,12 @@ def returnTimetable(direction):
 def onlyNeededTimetable(direction, lines, stop):
     allTimetables = returnTimetable(direction)
     timetable = defaultdict(list)
+    #print(len(allTimetables['4'].keys()))
     for item in lines:
         timetable[item] = allTimetables[item][stop]
     return timetable
 # ReadPKL('TimetableDic.pkl', 'rb')
-
+#t = onlyNeededTimetable('inbound',['4','3'],'Bristol College Green (P1)')
 '''Load dictionary from .pkl file without losing original variable type '''
 # File = open('TimetableDic.pkl', 'rb')
 # Dic = pickle.load(File)

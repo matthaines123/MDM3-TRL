@@ -35,7 +35,7 @@ def findMeanPunct(timetable, times, lines):
         exactHours.append(exactHoursSingle)
     lateness = [item for sublist in lateness for item in sublist]
     exactHours = [item for sublist in exactHours for item in sublist]
-    eachHour = np.unique(np.array(exactHours))
+    eachHour = list(np.unique(np.array(exactHours)))
     latenessDict = defaultdict(list)
     for key,value in zip(exactHours,lateness):
         latenessDict[key].append(value)
@@ -46,8 +46,8 @@ def findMeanPunct(timetable, times, lines):
         means.append(np.mean(value))
         medians.append(np.median(value))
         sd.append(np.std(value))
-    eachHour.pop[-1]
-    means.pop(-1)
+    #eachHour.pop(-1)
+    #means.pop(-1)
     medians.pop(-1)
     return eachHour, means, medians, sd
 
