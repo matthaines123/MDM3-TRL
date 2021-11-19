@@ -235,8 +235,11 @@ def getDistanceBetweenStops(stop1, stop2, lines, ids):
                 dict_data = xmltodict.parse(xml_obj.read())['TransXChange']
                 routeSection = dict_data['RouteSections']['RouteSection'][0]
                 for sectionList in routeSection['RouteLink']:
-                    if sectionList['From']['StopPointRef'] == ids[0]:
-                        print('test')
+                    print(ids)
+                    if sectionList['From']['StopPointRef'] == ids[0] and sectionList['To']['StopPointRef'] == ids[1]:
+                        
+                        lineDistances[line] = sectionList['Distance']
+                    elif sectionList['From']['StopPointRef'] == ids[1] and sectionList['To']['StopPointRef'] == ids[0]:
                         lineDistances[line] = sectionList['Distance']
     print(lineDistances)
     return lineDistances[lines[0]]

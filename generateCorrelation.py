@@ -18,9 +18,11 @@ def getBusLateness(FILENAMES, stop, lines, direction, stopLocation, popTime):
     hours, means, medians, vars = findMeanPunct(timetable, ltimes, lines)
     return means, hours
 
-def getBusSpeeds(ANPRFILE, filenames,  roadName, stops, lines, direction, ids, timeRange, stopLocation, popTime):
+def getBusSpeeds(ANPRFILE, filenames,  roadName, stops, lines, direction, ids, timeRange, stopLocation, popTime, distance):
     times = getTimesBetweenStops(stops[0], stops[1], lines, ids, filenames, stopLocation, direction, timeRange, popTime)
-    distance = getDistanceBetweenStops(stops[0], stops[1], lines, ids)
+    #distance = getDistanceBetweenStops(stops[0], stops[1], lines, ids)
+    distance = distance
+    
     busSpeeds = [float(distance)/(time*1609) for time in times]
     return busSpeeds
 
@@ -53,23 +55,26 @@ FILENAMES = listFilenames()
 ANPRFILENAME = 'dim-journey-links.json'
 
 #Defining variables
-roadName = 'Bond St'
+roadName = 'Anchor Rd'
 # Only put the lines in that we have files for in the RawTimetableData folder!!!
-lines = ['72a']
+lines = ['3, 4']
 # inbound/southbound or outbound/northbound
-direction = 'inbound'
+direction = 'outbound'
 # first stop followed by the second the bus goes though - see overleaf
-busStopNames = ['Bristol Royal Infirmary', 'Stokes Croft']
-stopNameFromFile = 'Bristol Royal Infirmary (H2)'
+busStopNames = ['College Green', 'The Centre']
+stopNameFromFile = 'Bristol College Green (P2)'
 # Take the longs/lats from key list.txt
-stopLocation = [['51.45866049866497', '-2.5960978573500415'],['51.45990783545194', '-2.5917372150215985']]
+stopLocation = [['51.453420', '-2.601350'],['51.454920', '-2.596850']]
 # Found in the key list.txt
-ids = ['0100BRP90273', '0100BRP90366']
+ids = ['0100BRP90326', '0100BRP90337']
+distance = 561
+
+
 timeRange = [8, 19]
 duration = 30
 
 
-busSpeed = getBusSpeeds(ANPRFILENAME, FILENAMES, roadName, busStopNames, lines, direction, ids, timeRange, stopLocation, True)
+busSpeed = getBusSpeeds(ANPRFILENAME, FILENAMES, roadName, busStopNames, lines, direction, ids, timeRange, stopLocation, True, distance)
 print(busSpeed)
 
 trafficSpeed = getTrafficSpeeds(timeRange, roadName, duration)
