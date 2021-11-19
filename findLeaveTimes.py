@@ -12,7 +12,7 @@ def getSingleLine(df, line):
     return dfLine
 
 def getTimeFromLocation(filename, location, line):
-    accuracy = 2
+    accuracy = 3
     locations = [location]
     truncatedStopLocations = [[round(i, accuracy) for i in stop] for stop in locations]
     df = LoadLocationData(filename)
