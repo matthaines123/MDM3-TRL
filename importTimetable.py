@@ -14,7 +14,6 @@ def getTimetable(FileName):
     Current = os.getcwd()
     # print(Current)
     BusNum = Name[0]
-    #Bound = Name[1]
 
     if '.txt' not in FileName:
         FileName = FileName + '.txt'
@@ -35,7 +34,6 @@ def getTimetable(FileName):
         while True:
             try:
                 Line = RawDataList[LineNum + TimeLines]
-                # print(RawDataList[0], RawDataList[1])
             except IndexError:
                 break
             FirstLetter = Line.split()[0]
@@ -72,9 +70,9 @@ def getTimetable(FileName):
                         Interval, TimeList = FindRecurrentTime(TimeList)
                         RepeatTimeListDic = FindRepeatTime(Interval, TimeList)
                         List = list(Interval.keys())
-                        for k in range(len(List)):
-                            Del = List[k] + 1 - k
-                            TimeList.pop(Del)
+                        # for k in range(len(List)):
+                        #     Del = List[k] + 1 - k
+                        #     TimeList.pop(Del)
                         TimeList = InsertRepeatTimeList(RepeatTimeListDic, TimeList)
                 else:
                     if IsRecurrent is True:
@@ -147,6 +145,8 @@ def FindRepeatTime(Interval, TimeList):
         StartTime = [int(t) for t in Start]
         End = TimeList[recur + 1]
         while True:
+            if not StartTime:
+                break
             StartTime[-1] += IntervalTimeList[-1]
             StartTime[-2] += IntervalTimeList[-2]
             # NewTime = Start + Repeat * RepeatTime
